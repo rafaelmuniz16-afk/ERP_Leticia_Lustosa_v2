@@ -5,7 +5,15 @@ let diagnosticTimer = null;
 function get15BusinessDiagnostics() {
   const c = calculate();
   const f = calcFinancial(c);
-  const hoje = new Date().toISOString().slice(0, 10);
+  
+  let hoje = '';
+  try {
+    hoje = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Fortaleza' }).format(new Date());
+  } catch(e) {
+    const dNow = new Date();
+    hoje = dNow.getFullYear() + '-' + String(dNow.getMonth() + 1).padStart(2, '0') + '-' + String(dNow.getDate()).padStart(2, '0');
+  }
+
   const casosHoje = bd.filter(d => normalizeDate(d.data) === hoje && getMesCorreto(d) === c.month).length;
 
   const now = new Date();
@@ -43,39 +51,39 @@ function get15BusinessDiagnostics() {
   }
 
   const d = [];
-  d.push(`📈 Projeção: ritmo para fechar o mês com ~${projecaoFechamento} casos reais.`);
-  if (pctMeta >= 100) d.push(`🏆 Faixa máxima (100%) garantida no bolso com honras!`);
-  else if (pctMeta >= 90) d.push(`🎯 Faixa de 90% ativa! Faltam só ${Math.max(0, c.meta - c.reais)} casos p/ 100%`);
-  else if (pctMeta >= 80) d.push(`💰 Faixa de 80% atingida! Faltam ${Math.max(0, Math.ceil(c.meta * 0.9) - c.reais)} p/ 90%`);
-  else d.push(`🎯 Faltam ${Math.max(0, Math.ceil(c.meta * 0.8) - c.reais)} casos reais para ativar o bônus (80%)`);
+  d.push('📈 Projeção: ritmo para fechar o mês com ~' + projecaoFechamento + ' casos reais.');
+  if (pctMeta >= 100) d.push('🏆 Faixa máxima (100%) garantida no bolso com honras!');
+  else if (pctMeta >= 90) d.push('🎯 Faixa de 90% ativa! Faltam só ' + Math.max(0, c.meta - c.reais) + ' casos p/ 100%');
+  else if (pctMeta >= 80) d.push('💰 Faixa de 80% atingida! Faltam ' + Math.max(0, Math.ceil(c.meta * 0.9) - c.reais) + ' p/ 90%');
+  else d.push('🎯 Faltam ' + Math.max(0, Math.ceil(c.meta * 0.8) - c.reais) + ' casos reais para ativar o bônus (80%)');
 
-  d.push(`💵 Ganho real atual consolidado: ${formatMoney(f.total)}`);
-  if (diferencaPara100 > 0) d.push(`✨ Bater 100% adiciona +${formatMoney(diferencaPara100)} de bônus na sua conta`);
-  else d.push(`⭐ Bônus máximo conquistado: teto financeiro de ${formatMoney(f.idealTotal)}!`);
+  d.push('💵 Ganho real atual consolidado: ' + formatMoney(f.total));
+  if (diferencaPara100 > 0) d.push('✨ Bater 100% adiciona +' + formatMoney(diferencaPara100) + ' de bônus na sua conta');
+  else d.push('⭐ Bônus máximo conquistado: teto financeiro de ' + formatMoney(f.idealTotal) + '!');
 
-  d.push(`⏱️ Meta diária necessária: ${dailyTarget(c.faltaReais, c.month)}`);
-  d.push(`⚡ Hoje você já registrou ${casosHoje} caso(s) neste mês`);
-  d.push(`✅ Taxa de conversão Panjud: ${taxaHomologacao}% dos seus casos foram homologados`);
+  d.push('⏱️ Meta diária necessária: ' + dailyTarget(c.faltaReais, c.month));
+  d.push('⚡ Hoje você já registrou ' + casosHoje + ' caso(s) neste mês');
+  d.push('✅ Taxa de conversão Panjud: ' + taxaHomologacao + '% dos seus casos foram homologados');
 
-  if (c.recusados > 0) d.push(`⚠️ ${c.recusados} recusado(s) Panjud tiraram ~${formatMoney(ganhoPerdidoRecusados)} da meta real`);
-  else d.push(`💎 Zero recusados no Panjud: precisão operacional de 100%!`);
+  if (c.recusados > 0) d.push('⚠️ ' + c.recusados + ' recusado(s) Panjud tiraram ~' + formatMoney(ganhoPerdidoRecusados) + ' da meta real');
+  else d.push('💎 Zero recusados no Panjud: precisão operacional de 100%!');
 
-  d.push(`💼 Ônus (R$ 4 a 100%): ${c.onus} casos = ${formatMoney(f.idealOnus)}`);
-  d.push(`🤝 Acordo (R$ 3 a 100%): ${c.acordo} casos = ${formatMoney(f.idealAcordo)}`);
-  d.push(`🎉 Êxito (R$ 2 a 100%): ${c.exito} casos = ${formatMoney(f.idealExito)}`);
-  d.push(`📊 Balanço: ${c.quant} casos cadastrados contra ${c.reais} confirmados Panjud`);
-  d.push(`📅 Restam ${diasUteisRestantes} dia(s) útil(eis) de trabalho até fechar o mês`);
+  d.push('💼 Ônus (R$ 4 a 100%): ' + c.onus + ' casos = ' + formatMoney(f.idealOnus));
+  d.push('🤝 Acordo (R$ 3 a 100%): ' + c.acordo + ' casos = ' + formatMoney(f.idealAcordo));
+  d.push('🎉 Êxito (R$ 2 a 100%): ' + c.exito + ' casos = ' + formatMoney(f.idealExito));
+  d.push('📊 Balanço: ' + c.quant + ' casos cadastrados contra ' + c.reais + ' confirmados Panjud');
+  d.push('📅 Restam ' + diasUteisRestantes + ' dia(s) útil(eis) de trabalho até fechar o mês');
 
   if (c.quant > 0) {
     let maxTipo = 'Êxito', maxPct = Math.round((c.exito / c.quant) * 100);
     if (c.acordo >= c.exito && c.acordo >= c.onus) { maxTipo = 'Acordo'; maxPct = Math.round((c.acordo / c.quant) * 100); }
     else if (c.onus >= c.exito && c.onus >= c.acordo) { maxTipo = 'Ônus'; maxPct = Math.round((c.onus / c.quant) * 100); }
-    d.push(`📌 Mix: ${maxTipo} é o tipo líder representando ${maxPct}% da carteira`);
+    d.push('📌 Mix: ' + maxTipo + ' é o tipo líder representando ' + maxPct + '% da carteira');
   } else {
-    d.push(`📌 Cadastre encerramentos para traçar o mix da carteira`);
+    d.push('📌 Cadastre encerramentos para traçar o mix da carteira');
   }
 
-  d.push(`🏁 Placar global: ${c.reais} de ${c.meta} necessários (${pctMeta.toFixed(1)}% batido)`);
+  d.push('🏁 Placar global: ' + c.reais + ' de ' + c.meta + ' necessários (' + pctMeta.toFixed(1) + '% batido)');
   return d;
 }
 
