@@ -20,6 +20,19 @@ let chatHistory = [{role:'assistant', content:'Olá, Letícia! Eu sou a Aurora. 
 const $ = id => document.getElementById(id);
 const monthName = m => MONTHS.find(x => x[0] === String(m))?.[1] || '—';
 
+// DATA OFICIAL LOCAL (AMERICA/FORTALEZA - UTC-3)
+function getTodayLocal() {
+  try {
+    return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Fortaleza' }).format(new Date());
+  } catch(e) {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + day;
+  }
+}
+
 function setLoading(show, title='Sincronizando…') {
   $('loadingTitle').textContent = title;
   $('loading').classList.toggle('show', show);
@@ -74,7 +87,7 @@ function setConn(state, label) {
 // ==== AUDITORIA ====
 function registrarLog(acao, idCaso, detalhes) {
   if (!Array.isArray(logsAuditoria)) logsAuditoria = [];
-  const dataAtual = new Date().toLocaleString('pt-BR');
+  const dataAtual = new Date().toLocaleString('pt-BR', { timeZone: 'America/Fortaleza' });
   const novoLog = { dataHora: dataAtual, acao, idCaso, detalhes };
   logsAuditoria.unshift(novoLog);
   if(logsAuditoria.length > 200) logsAuditoria.pop(); 
@@ -172,10 +185,10 @@ async function loadCloud(initial=false) {
 }
 
 function fillMonths() {
-  const fm = $('filterMonth'), fr = $('mesReferenciaForm');
+  const fm = $('filterMonth'), fr =$('mesReferenciaForm');
   fm.innerHTML = MONTHS.map(([v,n]) => '<option value="' + v + '">' + n + '</option>').join('');
   fr.innerHTML = MONTHS.map(([v,n]) => '<option value="' + v + '">' + n + '</option>').join('');
-  const now = String(new Date().getMonth() + 1).padStart(2,'0');
+  const now = getTodayLocal().split('-')[1];
   const last = localStorage.getItem(LAST_MONTH_KEY) || now;
   const chosen = MONTHS.some(x => x[0] === last) ? last : '06';
   fm.value = chosen;
@@ -194,7 +207,7 @@ function updateMetaInput() {
 function getFiltered() {
   const month = getSelectedMonth();
   let rows = bd.filter(d => getMesCorreto(d) === month);
-  const tipo = $('filterTipo').value, pan = $('filterEncerrado').value, q = $('searchInput').value.toLowerCase().trim(), st = $('searchType').value, dStart = $('dateStart').value, dEnd = $('dateEnd').value;
+  const tipo = $('filterTipo').value, pan =$('filterEncerrado').value, q = $('searchInput').value.toLowerCase().trim(), st =$('searchType').value, dStart = $('dateStart').value, dEnd =$('dateEnd').value;
   if(tipo !== 'Todos') rows = rows.filter(d => d.tipo === tipo);
   if(pan !== 'Todos') rows = rows.filter(d => d.panjud === pan);
   if(q) rows = rows.filter(d => String(st === 'id' ? d.id : d.processo).toLowerCase().includes(q));
@@ -255,8 +268,7 @@ function renderStatus(c) {
   const pct = c.meta > 0 ? c.reais / c.meta : 0;
   const box = $('statusBanner');
   box.className = 'status ' + (pct >= 1 ? 'status-100' : pct >= .9 ? 'status-90' : pct >= .8 ? 'status-80' : 'status-bad');
-  $('statusProgress').style.width = Math.min(100, pct * 100) + '%';
-  $('statusTitle').textContent = pct >= 1 ? 'Meta atingida — excelente!' : pct >= .9 ? 'Você está em 90% da meta (' + (pct * 100).toFixed(1) + '%).' : pct >= .8 ? 'Você chegou à faixa de 80% (' + (pct * 100).toFixed(1) + '%).' : 'Meta ainda não atingida (' + (pct * 100).toFixed(1) + '%).';
+  $('statusProgress').style.width = Math.min(100, pct * 100) + '\%';$('statusTitle').textContent = pct >= 1 ? 'Meta atingida — excelente!' : pct >= .9 ? 'Você está em 90% da meta (' + (pct * 100).toFixed(1) + '%).' : pct >= .8 ? 'Você chegou à faixa de 80% (' + (pct * 100).toFixed(1) + '%).' : 'Meta ainda não atingida (' + (pct * 100).toFixed(1) + '%).';
   $('statusSub').textContent = c.reais + ' reais de ' + c.meta + ' necessários • faltam ' + Math.max(0, c.faltaReais);
 }
 
@@ -278,14 +290,10 @@ function renderCharts(c) {
 
 function renderFinancial(c) {
   const f = calcFinancial(c);
-  $('val_real_onus').textContent = formatMoney(f.onus);
-  $('val_real_acordo').textContent = formatMoney(f.acordo);
-  $('val_real_exito').textContent = formatMoney(f.exito);
-  $('val_real_total').textContent = formatMoney(f.total);
-  $('val_100_onus').textContent = formatMoney(f.idealOnus);
-  $('val_100_acordo').textContent = formatMoney(f.idealAcordo);
-  $('val_100_exito').textContent = formatMoney(f.idealExito);
-  $('val_100_total').textContent = formatMoney(f.idealTotal);
+  $('val_real_onus').textContent = formatMoney(f.onus);$('val_real_acordo').textContent = formatMoney(f.acordo);
+  $('val_real_exito').textContent = formatMoney(f.exito);$('val_real_total').textContent = formatMoney(f.total);
+  $('val_100_onus').textContent = formatMoney(f.idealOnus);$('val_100_acordo').textContent = formatMoney(f.idealAcordo);
+  $('val_100_exito').textContent = formatMoney(f.idealExito);$('val_100_total').textContent = formatMoney(f.idealTotal);
 }
 
 function renderTable() {
@@ -387,10 +395,8 @@ function formData() {
 function clearForm() {
   editUid = null;
   $('processForm').reset();
-  $('dataEncerramento').value = new Date().toISOString().slice(0,10);
-  $('mesReferenciaForm').value = getSelectedMonth();
-  $('formTitle').textContent = 'Novo registro';
-  $('btnSubmit').textContent = '✓ Salvar registro';
+  $('dataEncerramento').value = getTodayLocal();$('mesReferenciaForm').value = getSelectedMonth();
+  $('formTitle').textContent = 'Novo registro';$('btnSubmit').textContent = '✓ Salvar registro';
   $('btnCancel').style.display = 'none';
   setTimeout(() => $('idCaso')?.focus(), 50);
 }
@@ -400,15 +406,12 @@ function startEdit(uidValue) {
   if(!r) return;
   editUid = uidValue;
   $('idCaso').value = r.id || '';
-  $('numProcesso').value = r.processo || '';
-  $('tipoEncerramento').value = r.tipo || 'Ônus';
+  $('numProcesso').value = r.processo \vert{}\vert{} '';$('tipoEncerramento').value = r.tipo || 'Ônus';
   $('dataEncerramento').value = normalizeDate(r.data);
-  $('mesReferenciaForm').value = getMesCorreto(r);
-  $('panjud').value = r.panjud || 'Não';
+  $('mesReferenciaForm').value = getMesCorreto(r);$('panjud').value = r.panjud || 'Não';
   $('recusado').value = r.recusado || 'Não';
   $('observacoes').value = r.observacoes || '';
-  $('formTitle').textContent = 'Editar registro';
-  $('btnSubmit').textContent = '✓ Atualizar registro';
+  $('formTitle').textContent = 'Editar registro';$('btnSubmit').textContent = '✓ Atualizar registro';
   $('btnCancel').style.display = 'inline-flex';
   document.getElementById('cadastro').scrollIntoView({behavior: 'smooth', block: 'start'});
   setTimeout(() => $('idCaso')?.focus(), 50);
@@ -416,7 +419,7 @@ function startEdit(uidValue) {
 
 async function handleSubmit(e) {
   e.preventDefault();
-  if($('panjud').value === 'Sim' && $('recusado').value === 'Sim') {
+  if($('panjud').value === 'Sim' &&$('recusado').value === 'Sim') {
     toast('error', 'Um caso não pode ser encerrado e recusado no Panjud ao mesmo tempo.');
     return;
   }
@@ -587,7 +590,7 @@ async function executeAIAction(a) {
       headers: {'Content-Type': 'text/plain;charset=utf-8'},
       body: JSON.stringify({acao: 'salvarMemoria', texto: a.texto})
     }).catch(err => console.log('Erro ao salvar memoria na nuvem:', err));
-    registrarLog('LEMBRAR (IA)', '-', 'Anotação: ' + a.texto);
+    registrarLog('LEMBRAR (IA)', '-', `Anotação: ${a.texto}`);
     return 'Memória salva.';
   }
   if(a.acao === 'cadastrar') {
@@ -595,7 +598,7 @@ async function executeAIAction(a) {
       id: String(a.id),
       processo: String(a.processo),
       tipo: a.tipo,
-      data: normalizeDate(a.data) || new Date().toISOString().slice(0,10),
+      data: normalizeDate(a.data) || getTodayLocal(),
       mesReferencia: String(a.mesReferencia || getSelectedMonth()).padStart(2,'0'),
       panjud: a.panjud || 'Não',
       recusado: a.recusado || 'Não',
@@ -652,7 +655,7 @@ function appendMessage(sender, text) {
   msg.innerHTML = safeText(text);
   wrap.appendChild(msg);
   $('chatMessages').appendChild(wrap);
-  $('chatMessages').scrollTop = $('chatMessages').scrollHeight;
+  $('chatMessages').scrollTop =$('chatMessages').scrollHeight;
 }
 
 function stripJsonBlock(text) {
@@ -826,7 +829,7 @@ function toggleAuditoria() {
 // ==== INICIALIZAÇÃO & MODO TURBO ====
 function bind() {
   fillMonths();
-  $('dataEncerramento').value = new Date().toISOString().slice(0,10);
+  $('dataEncerramento').value = getTodayLocal();
   $('filterMonth').addEventListener('change', () => {
     localStorage.setItem(LAST_MONTH_KEY, getSelectedMonth());
     updateMetaInput();
