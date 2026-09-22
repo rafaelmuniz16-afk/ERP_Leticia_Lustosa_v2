@@ -1,4 +1,4 @@
-const API_URL = '[https://script.google.com/macros/s/AKfycbzkcsULH3xNPbjNFmLy-wlqKuSE0cbwBlkqmVd8t1ugoP89RHzuW9wCMHK0V7eKYrxp/exec](https://script.google.com/macros/s/AKfycbzkcsULH3xNPbjNFmLy-wlqKuSE0cbwBlkqmVd8t1ugoP89RHzuW9wCMHK0V7eKYrxp/exec)';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzkcsULH3xNPbjNFmLy-wlqKuSE0cbwBlkqmVd8t1ugoP89RHzuW9wCMHK0V7eKYrxp/exec';
 
 const MONTHS = [['06','Junho'],['07','Julho'],['08','Agosto'],['09','Setembro'],['10','Outubro'],['11','Novembro'],['12','Dezembro']];
 const CACHE_KEY = 'bd_oficial_leticia';
@@ -85,7 +85,7 @@ function registrarLog(acao, idCaso, detalhes) {
     method: 'POST',
     headers: {'Content-Type': 'text/plain;charset=utf-8'},
     body: JSON.stringify({acao: 'salvarLog', dataHora: dataAtual, acaoLog: acao, idCaso: idCaso, detalhes: detalhes})
-  }).catch(err => console.log("Erro de log:", err));
+  }).catch(err => console.log('Erro de log:', err));
 }
 
 function renderLogs() {
@@ -102,12 +102,7 @@ function renderLogs() {
     let badgeClass = 'b-acordo';
     if(l.acao.includes('CADASTRAR')) badgeClass = 'b-exito';
     if(l.acao.includes('APAGAR')) badgeClass = 'b-onus';
-    tr.innerHTML = `
-      <td style="white-space:nowrap">${l.dataHora}</td>
-      <td><span class="badge ${badgeClass}">${l.acao}</span></td>
-      <td><strong>${l.idCaso}</strong></td>
-      <td style="color:var(--muted); max-width:400px;">${l.detalhes}</td>
-    `;
+    tr.innerHTML = '<td style="white-space:nowrap">' + l.dataHora + '</td><td><span class="badge ' + badgeClass + '">' + l.acao + '</span></td><td><strong>' + l.idCaso + '</strong></td><td style="color:var(--muted); max-width:400px;">' + l.detalhes + '</td>';
     tbody.appendChild(tr);
   });
 }
@@ -166,7 +161,9 @@ async function loadCloud(initial=false) {
     setConn('online', 'Online');
     $('sideCount').textContent = bd.length;
     renderAll();
-    startDiagnosticLoop();
+    if (typeof startDiagnosticLoop === 'function') {
+      startDiagnosticLoop();
+    }
   } else {
     setConn('offline', 'Sem conexão');
     toast('warning', 'Não foi possível confirmar os dados da nuvem.');
@@ -176,8 +173,8 @@ async function loadCloud(initial=false) {
 
 function fillMonths() {
   const fm = $('filterMonth'), fr = $('mesReferenciaForm');
-  fm.innerHTML = MONTHS.map(([v,n]) => `<option value="${v}">${n}</option>`).join('');
-  fr.innerHTML = MONTHS.map(([v,n]) => `<option value="${v}">${n}</option>`).join('');
+  fm.innerHTML = MONTHS.map(([v,n]) => '<option value="' + v + '">' + n + '</option>').join('');
+  fr.innerHTML = MONTHS.map(([v,n]) => '<option value="' + v + '">' + n + '</option>').join('');
   const now = String(new Date().getMonth() + 1).padStart(2,'0');
   const last = localStorage.getItem(LAST_MONTH_KEY) || now;
   const chosen = MONTHS.some(x => x[0] === last) ? last : '06';
@@ -197,7 +194,7 @@ function updateMetaInput() {
 function getFiltered() {
   const month = getSelectedMonth();
   let rows = bd.filter(d => getMesCorreto(d) === month);
-  const tipo = $('filterTipo').value, pan =$('filterEncerrado').value, q = $('searchInput').value.toLowerCase().trim(), st =$('searchType').value, dStart = $('dateStart').value, dEnd =$('dateEnd').value;
+  const tipo = $('filterTipo').value, pan = $('filterEncerrado').value, q = $('searchInput').value.toLowerCase().trim(), st = $('searchType').value, dStart = $('dateStart').value, dEnd = $('dateEnd').value;
   if(tipo !== 'Todos') rows = rows.filter(d => d.tipo === tipo);
   if(pan !== 'Todos') rows = rows.filter(d => d.panjud === pan);
   if(q) rows = rows.filter(d => String(st === 'id' ? d.id : d.processo).toLowerCase().includes(q));
@@ -258,8 +255,9 @@ function renderStatus(c) {
   const pct = c.meta > 0 ? c.reais / c.meta : 0;
   const box = $('statusBanner');
   box.className = 'status ' + (pct >= 1 ? 'status-100' : pct >= .9 ? 'status-90' : pct >= .8 ? 'status-80' : 'status-bad');
-  $('statusProgress').style.width = Math.min(100, pct * 100) + '\%';$('statusTitle').textContent = pct >= 1 ? 'Meta atingida — excelente!' : pct >= .9 ? `Você está em 90% da meta (${(pct * 100).toFixed(1)}%).` : pct >= .8 ? `Você chegou à faixa de 80% (${(pct * 100).toFixed(1)}%).` : `Meta ainda não atingida (${(pct * 100).toFixed(1)}%).`;
-  $('statusSub').textContent = `${c.reais} reais de ${c.meta} necessários • faltam ${Math.max(0, c.faltaReais)}`;
+  $('statusProgress').style.width = Math.min(100, pct * 100) + '%';
+  $('statusTitle').textContent = pct >= 1 ? 'Meta atingida — excelente!' : pct >= .9 ? 'Você está em 90% da meta (' + (pct * 100).toFixed(1) + '%).' : pct >= .8 ? 'Você chegou à faixa de 80% (' + (pct * 100).toFixed(1) + '%).' : 'Meta ainda não atingida (' + (pct * 100).toFixed(1) + '%).';
+  $('statusSub').textContent = c.reais + ' reais de ' + c.meta + ' necessários • faltam ' + Math.max(0, c.faltaReais);
 }
 
 function renderCharts(c) {
@@ -280,10 +278,14 @@ function renderCharts(c) {
 
 function renderFinancial(c) {
   const f = calcFinancial(c);
-  $('val_real_onus').textContent = formatMoney(f.onus);$('val_real_acordo').textContent = formatMoney(f.acordo);
-  $('val_real_exito').textContent = formatMoney(f.exito);$('val_real_total').textContent = formatMoney(f.total);
-  $('val_100_onus').textContent = formatMoney(f.idealOnus);$('val_100_acordo').textContent = formatMoney(f.idealAcordo);
-  $('val_100_exito').textContent = formatMoney(f.idealExito);$('val_100_total').textContent = formatMoney(f.idealTotal);
+  $('val_real_onus').textContent = formatMoney(f.onus);
+  $('val_real_acordo').textContent = formatMoney(f.acordo);
+  $('val_real_exito').textContent = formatMoney(f.exito);
+  $('val_real_total').textContent = formatMoney(f.total);
+  $('val_100_onus').textContent = formatMoney(f.idealOnus);
+  $('val_100_acordo').textContent = formatMoney(f.idealAcordo);
+  $('val_100_exito').textContent = formatMoney(f.idealExito);
+  $('val_100_total').textContent = formatMoney(f.idealTotal);
 }
 
 function renderTable() {
@@ -298,7 +300,7 @@ function renderTable() {
   });
   const maxPage = Math.max(1, Math.ceil(data.length / itemsPerPage));
   if(currentPage > maxPage) currentPage = maxPage;
-  $('pageInfo').textContent = `Página ${currentPage} de ${maxPage}`;
+  $('pageInfo').textContent = 'Página ' + currentPage + ' de ' + maxPage;
   $('btnPrevPage').disabled = currentPage === 1;
   $('btnNextPage').disabled = currentPage === maxPage;
   if(!data.length) {
@@ -351,9 +353,9 @@ function renderAll() {
   $('count_exito').textContent = c.exito;
   $('m6_totais').textContent = c.totais;
   $('falta_quant').textContent = c.faltaQuant;
-  $('labelQuant').textContent = `${c.quant} / ${c.meta}`;
-  $('labelTotais').textContent = `${c.totais} / ${c.meta}`;
-  $('labelReais').textContent = `${c.reais} / ${c.meta}`;
+  $('labelQuant').textContent = c.quant + ' / ' + c.meta;
+  $('labelTotais').textContent = c.totais + ' / ' + c.meta;
+  $('labelReais').textContent = c.reais + ' / ' + c.meta;
   const dt = dailyTarget(c.faltaReais, c.month);
   $('meta_diaria').textContent = dt;
   $('meta_diaria_2').textContent = dt;
@@ -385,8 +387,10 @@ function formData() {
 function clearForm() {
   editUid = null;
   $('processForm').reset();
-  $('dataEncerramento').value = new Date().toISOString().slice(0,10);$('mesReferenciaForm').value = getSelectedMonth();
-  $('formTitle').textContent = 'Novo registro';$('btnSubmit').textContent = '✓ Salvar registro';
+  $('dataEncerramento').value = new Date().toISOString().slice(0,10);
+  $('mesReferenciaForm').value = getSelectedMonth();
+  $('formTitle').textContent = 'Novo registro';
+  $('btnSubmit').textContent = '✓ Salvar registro';
   $('btnCancel').style.display = 'none';
   setTimeout(() => $('idCaso')?.focus(), 50);
 }
@@ -396,12 +400,15 @@ function startEdit(uidValue) {
   if(!r) return;
   editUid = uidValue;
   $('idCaso').value = r.id || '';
-  $('numProcesso').value = r.processo \vert{}\vert{} '';$('tipoEncerramento').value = r.tipo || 'Ônus';
+  $('numProcesso').value = r.processo || '';
+  $('tipoEncerramento').value = r.tipo || 'Ônus';
   $('dataEncerramento').value = normalizeDate(r.data);
-  $('mesReferenciaForm').value = getMesCorreto(r);$('panjud').value = r.panjud || 'Não';
+  $('mesReferenciaForm').value = getMesCorreto(r);
+  $('panjud').value = r.panjud || 'Não';
   $('recusado').value = r.recusado || 'Não';
   $('observacoes').value = r.observacoes || '';
-  $('formTitle').textContent = 'Editar registro';$('btnSubmit').textContent = '✓ Atualizar registro';
+  $('formTitle').textContent = 'Editar registro';
+  $('btnSubmit').textContent = '✓ Atualizar registro';
   $('btnCancel').style.display = 'inline-flex';
   document.getElementById('cadastro').scrollIntoView({behavior: 'smooth', block: 'start'});
   setTimeout(() => $('idCaso')?.focus(), 50);
@@ -409,7 +416,7 @@ function startEdit(uidValue) {
 
 async function handleSubmit(e) {
   e.preventDefault();
-  if($('panjud').value === 'Sim' &&$('recusado').value === 'Sim') {
+  if($('panjud').value === 'Sim' && $('recusado').value === 'Sim') {
     toast('error', 'Um caso não pode ser encerrado e recusado no Panjud ao mesmo tempo.');
     return;
   }
@@ -425,20 +432,20 @@ async function handleSubmit(e) {
       await editServer(data);
       const idx = bd.findIndex(x => String(x._uid) === String(editUid));
       if(idx >= 0) bd[idx] = data;
-      registrarLog('EDITAR', data.id, `Processo: ${data.processo} | Tipo alterado: ${data.tipo} | Panjud: ${data.panjud}`);
+      registrarLog('EDITAR', data.id, 'Processo: ' + data.processo + ' | Tipo alterado: ' + data.tipo + ' | Panjud: ' + data.panjud);
       toast('success', 'Registro confirmado pela nuvem.');
     } else {
       data._uid = uid();
       await saveRecord(data);
       bd.push(data);
-      registrarLog('CADASTRAR', data.id, `Processo: ${data.processo} | Tipo: ${data.tipo} | Panjud: ${data.panjud}`);
+      registrarLog('CADASTRAR', data.id, 'Processo: ' + data.processo + ' | Tipo: ' + data.tipo + ' | Panjud: ' + data.panjud);
       toast('success', 'Novo registro confirmado pela nuvem.');
     }
     localStorage.setItem(CACHE_KEY, JSON.stringify(bd));
     clearForm();
     renderAll();
     setConn('online', 'Online');
-    rotateBusinessDiagnostic();
+    if (typeof rotateBusinessDiagnostic === 'function') rotateBusinessDiagnostic();
   } catch(err) {
     toast('error', err.message);
     setConn('offline', 'Falha na nuvem');
@@ -452,7 +459,7 @@ async function deleteRecord(uidValue) {
   if(!r) return;
   const result = await Swal.fire({
     title: 'Excluir este caso?',
-    html: `<div style="font-size:12px;text-align:left"><b>ID:</b> ${escapeHTML(r.id)}<br><b>Processo:</b> ${escapeHTML(r.processo)}<br><b>Tipo:</b> ${escapeHTML(r.tipo)}</div>`,
+    html: '<div style="font-size:12px;text-align:left"><b>ID:</b> ' + escapeHTML(r.id) + '<br><b>Processo:</b> ' + escapeHTML(r.processo) + '<br><b>Tipo:</b> ' + escapeHTML(r.tipo) + '</div>',
     showCancelButton: true,
     confirmButtonText: 'Excluir',
     cancelButtonText: 'Cancelar',
@@ -465,11 +472,11 @@ async function deleteRecord(uidValue) {
     await deleteServer(uidValue);
     bd = bd.filter(x => String(x._uid) !== String(uidValue));
     localStorage.setItem(CACHE_KEY, JSON.stringify(bd));
-    registrarLog('APAGAR', r.id, `Processo: ${r.processo} removido do sistema.`);
+    registrarLog('APAGAR', r.id, 'Processo: ' + r.processo + ' removido do sistema.');
     renderAll();
     toast('success', 'Registro removido com confirmação da nuvem.');
     setConn('online', 'Online');
-    rotateBusinessDiagnostic();
+    if (typeof rotateBusinessDiagnostic === 'function') rotateBusinessDiagnostic();
   } catch(err) {
     toast('error', err.message);
     setConn('offline', 'Falha na nuvem');
@@ -492,7 +499,7 @@ async function saveMeta() {
       lastConfirmedMetas[month] = value;
       toast('success', 'Meta confirmada pela nuvem.');
       setConn('online', 'Online');
-      rotateBusinessDiagnostic();
+      if (typeof rotateBusinessDiagnostic === 'function') rotateBusinessDiagnostic();
     } catch(err) {
       metas[month] = previous;
       localStorage.setItem(META_KEY, JSON.stringify(metas));
@@ -579,8 +586,8 @@ async function executeAIAction(a) {
       method: 'POST',
       headers: {'Content-Type': 'text/plain;charset=utf-8'},
       body: JSON.stringify({acao: 'salvarMemoria', texto: a.texto})
-    }).catch(err => console.log("Erro ao salvar memoria na nuvem:", err));
-    registrarLog('LEMBRAR (IA)', '-', `Anotação: ${a.texto}`);
+    }).catch(err => console.log('Erro ao salvar memoria na nuvem:', err));
+    registrarLog('LEMBRAR (IA)', '-', 'Anotação: ' + a.texto);
     return 'Memória salva.';
   }
   if(a.acao === 'cadastrar') {
@@ -598,7 +605,7 @@ async function executeAIAction(a) {
     await saveRecord(rec);
     bd.push(rec);
     localStorage.setItem(CACHE_KEY, JSON.stringify(bd));
-    registrarLog('CADASTRAR (IA)', rec.id, `Processo: ${rec.processo} | Tipo: ${rec.tipo}`);
+    registrarLog('CADASTRAR (IA)', rec.id, 'Processo: ' + rec.processo + ' | Tipo: ' + rec.tipo);
     return 'Cadastro confirmado.';
   }
   if(a.acao === 'editar') {
@@ -608,14 +615,14 @@ async function executeAIAction(a) {
     const idx = bd.findIndex(r => String(r._uid) === String(v.record._uid));
     if(idx >= 0) bd[idx] = next;
     localStorage.setItem(CACHE_KEY, JSON.stringify(bd));
-    registrarLog('EDITAR (IA)', next.id, `Atualizado via Chat. Processo: ${next.processo}`);
+    registrarLog('EDITAR (IA)', next.id, 'Atualizado via Chat. Processo: ' + next.processo);
     return 'Edição confirmada.';
   }
   if(a.acao === 'apagar') {
     await deleteServer(v.record._uid);
     bd = bd.filter(r => String(r._uid) !== String(v.record._uid));
     localStorage.setItem(CACHE_KEY, JSON.stringify(bd));
-    registrarLog('APAGAR (IA)', v.record.id, `Removido via Chat.`);
+    registrarLog('APAGAR (IA)', v.record.id, 'Removido via Chat.');
     return 'Exclusão confirmada.';
   }
 }
@@ -623,18 +630,17 @@ async function executeAIAction(a) {
 function buildPrompt(userText) {
   const mentions = bd.filter(c => String(userText).includes(String(c.id)) || String(userText).includes(String(c.processo || ''))).slice(0, 15);
   const context = mentions.length ? JSON.stringify(mentions) : 'Nenhum caso específico detectado.';
-  const lembrancasAnteriores = memoriaIA.length > 0 ? memoriaIA.join(" | ") : "Nenhuma memória registrada ainda.";
+  const lembrancasAnteriores = memoriaIA.length > 0 ? memoriaIA.join(' | ') : 'Nenhuma memória registrada ainda.';
   
-  let p = "Seu nome é Aurora. Você é a assistente administrativa do ERP da Letícia. Responda de forma fofa, carinhosa e animada!\n";
-  p += "REGRAS: 'Encerramento real' significa panjud === Sim. Nunca invente dados.\n";
-  p += "Para cadastrar, editar, apagar ou lembrar, gere OBRIGATORIAMENTE um bloco JSON com array de ações.\n";
-  p += "Exemplo: [{\"acao\":\"cadastrar\",\"id\":\"123\",\"processo\":\"...\",\"tipo\":\"Ônus\",\"data\":\"2026-09-02\",\"mesReferencia\":\"09\",\"panjud\":\"Não\",\"recusado\":\"Não\",\"observacoes\":\"...\"}]\n\n";
-  p += "LEMBRANÇAS DA IA:\n" + lembrancasAnteriores + "\n\n";
-  p += "BASE ESPECÍFICA:\n" + context + "\n\n";
-  p += "RESUMO MENSAL:\n" + JSON.stringify(summarizeForAI()) + "\n\n";
-  p += "METAS:\n" + JSON.stringify(metas) + "\n\n";
-  p += "SOLICITAÇÃO:\n" + userText;
-  
+  let p = 'Seu nome é Aurora. Você é a assistente administrativa do ERP da Letícia. Responda sempre de forma fofa, carinhosa, cheia de emojis fofos (💖, 🦄, ✨, 🌸) e com muito entusiasmo!\n\n';
+  p += 'REGRAS: "Encerramento real" significa panjud === Sim. Nunca invente dados.\n';
+  p += 'Para cadastrar, editar, apagar ou lembrar algo, gere OBRIGATORIAMENTE um bloco JSON com um array de ações.\n';
+  p += 'Formato: [{"acao":"cadastrar","id":"123","processo":"...","tipo":"Ônus","data":"2026-09-02","mesReferencia":"09","panjud":"Não","recusado":"Não","observacoes":"..."}]\n\n';
+  p += 'LEMBRANÇAS DA IA:\n' + lembrancasAnteriores + '\n\n';
+  p += 'BASE ESPECÍFICA:\n' + context + '\n\n';
+  p += 'RESUMO MENSAL:\n' + JSON.stringify(summarizeForAI()) + '\n\n';
+  p += 'METAS:\n' + JSON.stringify(metas) + '\n\n';
+  p += 'SOLICITAÇÃO:\n' + userText;
   return p;
 }
 
@@ -646,7 +652,7 @@ function appendMessage(sender, text) {
   msg.innerHTML = safeText(text);
   wrap.appendChild(msg);
   $('chatMessages').appendChild(wrap);
-  $('chatMessages').scrollTop =$('chatMessages').scrollHeight;
+  $('chatMessages').scrollTop = $('chatMessages').scrollHeight;
 }
 
 function stripJsonBlock(text) {
@@ -671,7 +677,7 @@ async function processAI() {
   try {
     let data = null, success = false, errMsg = '';
     for(const model of ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant', 'qwen/qwen3.6-27b']) {
-      const r = await fetch('[https://api.groq.com/openai/v1/chat/completions](https://api.groq.com/openai/v1/chat/completions)', {
+      const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey},
         body: JSON.stringify({model, messages: payload, temperature: .1})
@@ -724,7 +730,7 @@ async function processAI() {
           count++;
         }
         renderAll();
-        appendMessage('system', `✓ ${count} ação(ões) confirmada(s) pela nuvem.`);
+        appendMessage('system', '✓ ' + count + ' ação(ões) confirmada(s) pela nuvem.');
       } catch(err) {
         appendMessage('system', 'A execução foi interrompida: ' + err.message);
       } finally {
@@ -759,12 +765,17 @@ async function configAPIKey() {
 }
 
 function openAI() {
-  $('aiDrawer').classList.add('ai-open');$('aiDrawer').setAttribute('aria-hidden', 'false');
-  if(!$('chatMessages').children.length) {     chatHistory.forEach(m => appendMessage(m.role === 'assistant' ? 'bot' : 'user', m.content));   }$('chatInputText').focus();
+  $('aiDrawer').classList.add('ai-open');
+  $('aiDrawer').setAttribute('aria-hidden', 'false');
+  if(!$('chatMessages').children.length) {
+    chatHistory.forEach(m => appendMessage(m.role === 'assistant' ? 'bot' : 'user', m.content));
+  }
+  $('chatInputText').focus();
 }
 
 function closeAI() {
-  $('aiDrawer').classList.remove('ai-open');$('aiDrawer').setAttribute('aria-hidden', 'true');
+  $('aiDrawer').classList.remove('ai-open');
+  $('aiDrawer').setAttribute('aria-hidden', 'true');
 }
 
 // ==== JANELA FLUTUANTE DE AUDITORIA ====
@@ -815,13 +826,14 @@ function toggleAuditoria() {
 // ==== INICIALIZAÇÃO & MODO TURBO ====
 function bind() {
   fillMonths();
-  $('dataEncerramento').value = new Date().toISOString().slice(0,10);$('filterMonth').addEventListener('change', () => {
+  $('dataEncerramento').value = new Date().toISOString().slice(0,10);
+  $('filterMonth').addEventListener('change', () => {
     localStorage.setItem(LAST_MONTH_KEY, getSelectedMonth());
     updateMetaInput();
     $('mesReferenciaForm').value = getSelectedMonth();
     currentPage = 1;
     renderAll();
-    rotateBusinessDiagnostic();
+    if (typeof rotateBusinessDiagnostic === 'function') rotateBusinessDiagnostic();
   });
   $('metaInput').addEventListener('input', saveMeta);
   ['filterTipo','filterEncerrado','searchType','pageSize','sortOrder','dateStart','dateEnd'].forEach(id => {
@@ -836,34 +848,42 @@ function bind() {
     renderAll();
   });
   $('panjud').addEventListener('change', () => {
-    if($('panjud').value === 'Sim')$('recusado').value = 'Não';
+    if($('panjud').value === 'Sim') $('recusado').value = 'Não';
   });
   $('recusado').addEventListener('change', () => {
-    if($('recusado').value === 'Sim')$('panjud').value = 'Não';
+    if($('recusado').value === 'Sim') $('panjud').value = 'Não';
   });
   $('dataEncerramento').addEventListener('change', () => {
     const v = $('dataEncerramento').value;
     if(v) $('mesReferenciaForm').value = v.split('-')[1];
   });
-  $('processForm').addEventListener('submit', handleSubmit);$('btnCancel').addEventListener('click', clearForm);
-  $('btnReset').addEventListener('click', clearForm);$('btnPrevPage').addEventListener('click', () => {
+  $('processForm').addEventListener('submit', handleSubmit);
+  $('btnCancel').addEventListener('click', clearForm);
+  $('btnReset').addEventListener('click', clearForm);
+  $('btnPrevPage').addEventListener('click', () => {
     if(currentPage > 1) { currentPage--; renderAll(); }
   });
   $('btnNextPage').addEventListener('click', () => {
     const max = Math.max(1, Math.ceil(getFiltered().length / itemsPerPage));
     if(currentPage < max) { currentPage++; renderAll(); }
   });
-  $('btnRefresh').addEventListener('click', () => loadCloud(false));$('btnAiTop').addEventListener('click', openAI);
-  $('openAiFromNav').addEventListener('click', openAI);$('btnAiClose').addEventListener('click', closeAI);
-  $('aiBackdrop').addEventListener('click', closeAI);$('btnAiKey').addEventListener('click', configAPIKey);
-  $('btnChatSend').addEventListener('click', processAI);$('chatInputText').addEventListener('keydown', e => {
+  $('btnRefresh').addEventListener('click', () => loadCloud(false));
+  $('btnAiTop').addEventListener('click', openAI);
+  $('openAiFromNav').addEventListener('click', openAI);
+  $('btnAiClose').addEventListener('click', closeAI);
+  $('aiBackdrop').addEventListener('click', closeAI);
+  $('btnAiKey').addEventListener('click', configAPIKey);
+  $('btnChatSend').addEventListener('click', processAI);
+  $('chatInputText').addEventListener('keydown', e => {
     if(e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       processAI();
     }
   });
 
-  $('sideAuroraCard')?.addEventListener('click', rotateBusinessDiagnostic);
+  $('sideAuroraCard')?.addEventListener('click', () => {
+    if (typeof rotateBusinessDiagnostic === 'function') rotateBusinessDiagnostic();
+  });
 
   // MODO TURBO DE NAVEGAÇÃO
   const ordemCampos = ['idCaso','numProcesso','tipoEncerramento','dataEncerramento','mesReferenciaForm','panjud','recusado','observacoes'];
@@ -892,7 +912,7 @@ function bind() {
   });
 
   $('btnNavAuditoria')?.addEventListener('click', toggleAuditoria);
-  $('btnCloseAuditoria')?.addEventListener('click', () => {$('winAuditoria').style.display = 'none'; });
+  $('btnCloseAuditoria')?.addEventListener('click', () => { $('winAuditoria').style.display = 'none'; });
 
   document.querySelectorAll('.nav-btn[data-target]').forEach(b => {
     b.addEventListener('click', () => {
