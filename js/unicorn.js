@@ -1,6 +1,10 @@
-// ===== INTERATIVIDADE, FOFURA E EASTER EGG (10 CLIQUES) =====
+// ===== INTERATIVIDADE, FOFURA E EASTER EGG ROMÂNTICO (10 CLIQUES COM MÚSICA) =====
 (function() {
   const cuteChars = ['💖','🩷','✨','🌟','💜','💫','⭐','🦄'];
+
+  // TRILHA SONORA DO AMOR (musica.mp3 na raiz do repositório)
+  const romanticAudio = new Audio('./musica.mp3');
+  romanticAudio.preload = 'auto';
 
   function pop(x, y) {
     const amount = 7;
@@ -10,7 +14,7 @@
       el.textContent = cuteChars[Math.floor(Math.random() * cuteChars.length)];
       el.style.left = x + 'px';
       el.style.top = y + 'px';
-      const angle = (Math.PI * 2 * i / amount) + Math.random() * .55;
+      const angle = (Math.PI * 2 * i / amount) + Math.random() * 0.55;
       const dist = 24 + Math.random() * 46;
       el.style.setProperty('--dx', (Math.cos(angle) * dist).toFixed(1) + 'px');
       el.style.setProperty('--dy', (Math.sin(angle) * dist - 18).toFixed(1) + 'px');
@@ -40,6 +44,11 @@
       unicornClicks++;
       pop(e.clientX, e.clientY);
 
+      // NOVO: Pré-destrava o áudio no navegador com clique do usuário
+      if (unicornClicks === 1) {
+        romanticAudio.load();
+      }
+
       if (unicornClicks === 10) {
         unicornClicks = 0;
         bubble.textContent = 'SURPRESA! 💖';
@@ -51,9 +60,9 @@
               <img src="./foto.jpg" alt="Rafa e Letícia" onerror="this.src='foto.jpg'">
             </div>
             <p style="font-size:14px; color:#6b4d70; font-weight:600; line-height:1.6; margin:14px 0 0;">
-              Você achou o segredo 💕<br>
+              Você achou o segredo! 💖<br>
               Obrigado por ser essa mulher extraordinária e fazer minha vida infinitamente mais leve e feliz.<br>
-              <span style="color:#d85c9d; font-size:16px; font-weight:800;">Eu te amo com todo o meu coração! 💕🌸</span>
+              <span style="color:#d85c9d; font-size:16px; font-weight:800;">Eu te amo com todo o meu coração! 💕</span>
             </p>
           `,
           background: '#fff8fc',
@@ -62,6 +71,11 @@
           confirmButtonColor: '#df6ba6',
           customClass: { popup: 'swal2-romantic-popup' },
           willOpen: () => {
+            // Toca a música assim que o popup abre
+            romanticAudio.currentTime = 0;
+            romanticAudio.play().catch(err => console.log("A reprodução automática dependeu de interação prévia:", err));
+
+            // Chuva de confetes fofos
             for (let i = 0; i < 35; i++) {
               setTimeout(() => {
                 const rx = Math.random() * (window.innerWidth - 60) + 30;
@@ -69,6 +83,11 @@
                 pop(rx, ry);
               }, i * 65);
             }
+          },
+          didClose: () => {
+            // Pausa a música e reseta o tempo assim que fecha a foto
+            romanticAudio.pause();
+            romanticAudio.currentTime = 0;
           }
         });
         return;
