@@ -1,4 +1,4 @@
-const API_URL = 'https://script.google.com/macros/s/AKfycbzkcsULH3xNPbjNFmLy-wlqKuSE0cbwBlkqmVd8t1ugoP89RHzuW9wCMHK0V7eKYrxp/exec';
+const API_URL = '[https://script.google.com/macros/s/AKfycbzkcsULH3xNPbjNFmLy-wlqKuSE0cbwBlkqmVd8t1ugoP89RHzuW9wCMHK0V7eKYrxp/exec](https://script.google.com/macros/s/AKfycbzkcsULH3xNPbjNFmLy-wlqKuSE0cbwBlkqmVd8t1ugoP89RHzuW9wCMHK0V7eKYrxp/exec)';
 
 const MONTHS = [['06','Junho'],['07','Julho'],['08','Agosto'],['09','Setembro'],['10','Outubro'],['11','Novembro'],['12','Dezembro']];
 const CACHE_KEY = 'bd_oficial_leticia';
@@ -197,7 +197,7 @@ function updateMetaInput() {
 function getFiltered() {
   const month = getSelectedMonth();
   let rows = bd.filter(d => getMesCorreto(d) === month);
-  const tipo = $('filterTipo').value, pan = $('filterEncerrado').value, q = $('searchInput').value.toLowerCase().trim(), st = $('searchType').value, dStart = $('dateStart').value, dEnd = $('dateEnd').value;
+  const tipo = $('filterTipo').value, pan =$('filterEncerrado').value, q = $('searchInput').value.toLowerCase().trim(), st =$('searchType').value, dStart = $('dateStart').value, dEnd =$('dateEnd').value;
   if(tipo !== 'Todos') rows = rows.filter(d => d.tipo === tipo);
   if(pan !== 'Todos') rows = rows.filter(d => d.panjud === pan);
   if(q) rows = rows.filter(d => String(st === 'id' ? d.id : d.processo).toLowerCase().includes(q));
@@ -258,8 +258,7 @@ function renderStatus(c) {
   const pct = c.meta > 0 ? c.reais / c.meta : 0;
   const box = $('statusBanner');
   box.className = 'status ' + (pct >= 1 ? 'status-100' : pct >= .9 ? 'status-90' : pct >= .8 ? 'status-80' : 'status-bad');
-  $('statusProgress').style.width = Math.min(100, pct * 100) + '%';
-  $('statusTitle').textContent = pct >= 1 ? 'Meta atingida — excelente!' : pct >= .9 ? `Você está em 90% da meta (${(pct * 100).toFixed(1)}%).` : pct >= .8 ? `Você chegou à faixa de 80% (${(pct * 100).toFixed(1)}%).` : `Meta ainda não atingida (${(pct * 100).toFixed(1)}%).`;
+  $('statusProgress').style.width = Math.min(100, pct * 100) + '\%';$('statusTitle').textContent = pct >= 1 ? 'Meta atingida — excelente!' : pct >= .9 ? `Você está em 90% da meta (${(pct * 100).toFixed(1)}%).` : pct >= .8 ? `Você chegou à faixa de 80% (${(pct * 100).toFixed(1)}%).` : `Meta ainda não atingida (${(pct * 100).toFixed(1)}%).`;
   $('statusSub').textContent = `${c.reais} reais de ${c.meta} necessários • faltam ${Math.max(0, c.faltaReais)}`;
 }
 
@@ -664,7 +663,7 @@ async function processAI() {
   try {
     let data = null, success = false, errMsg = '';
     for(const model of ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant', 'qwen/qwen3.6-27b']) {
-      const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      const r = await fetch('[https://api.groq.com/openai/v1/chat/completions](https://api.groq.com/openai/v1/chat/completions)', {
         method: 'POST',
         headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey},
         body: JSON.stringify({model, messages: payload, temperature: .1})
