@@ -51,7 +51,7 @@
               <img src="./foto.jpg" alt="Rafa e Letícia" onerror="this.src='foto.jpg'">
             </div>
             <p style="font-size:14px; color:#6b4d70; font-weight:600; line-height:1.6; margin:14px 0 0;">
-              Você achou o segredo do unicórnio! ✨🦄<br>
+              Você achou o segredo 💕<br>
               Obrigado por ser essa mulher extraordinária e fazer minha vida infinitamente mais leve e feliz.<br>
               <span style="color:#d85c9d; font-size:16px; font-weight:800;">Eu te amo com todo o meu coração! 💕🌸</span>
             </p>
