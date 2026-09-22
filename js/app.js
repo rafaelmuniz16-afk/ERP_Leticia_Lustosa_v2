@@ -624,10 +624,18 @@ function buildPrompt(userText) {
   const mentions = bd.filter(c => String(userText).includes(String(c.id)) || String(userText).includes(String(c.processo || ''))).slice(0, 15);
   const context = mentions.length ? JSON.stringify(mentions) : 'Nenhum caso específico detectado.';
   const lembrancasAnteriores = memoriaIA.length > 0 ? memoriaIA.join(" | ") : "Nenhuma memória registrada ainda.";
-  return `Seu nome é Aurora. Você é a assistente administrativa do ERP da Letícia. Responda sempre de forma fofa e entusiasta!
-REGRAS: “Encerramento real” significa panjud === Sim. Nunca invente dados. Para cadastrar, editar, apagar ou lembrar algo, gere OBRIGATORIAMENTE um bloco JSON com um array de ações.
-Formato: [{"acao":"cadastrar","id":"123","processo":"...","tipo":"Ônus","data":"2026-09-02","mesReferencia":"09","panjud":"Não","recusado":"Não","observacoes":"..."}] ou [{"acao":"editar","id":"123","processo":"...","observacoes":"..."}] ou [{"acao":"apagar","id":"123","processo":"..."}] ou [{"acao":"lembrar","texto":"..."}].
-LEMBRANÇAS DA IA:\n${lembrancasAnteriores}\nBASE ESPECÍFICA:\n${context}\nRESUMO MENSAL:\n${JSON.stringify(summarizeForAI())}\nMETAS:\n${JSON.stringify(metas)}\nSOLICITAÇÃO:\n${userText}`;
+  
+  let p = "Seu nome é Aurora. Você é a assistente administrativa do ERP da Letícia. Responda de forma fofa, carinhosa e animada!\n";
+  p += "REGRAS: 'Encerramento real' significa panjud === Sim. Nunca invente dados.\n";
+  p += "Para cadastrar, editar, apagar ou lembrar, gere OBRIGATORIAMENTE um bloco JSON com array de ações.\n";
+  p += "Exemplo: [{\"acao\":\"cadastrar\",\"id\":\"123\",\"processo\":\"...\",\"tipo\":\"Ônus\",\"data\":\"2026-09-02\",\"mesReferencia\":\"09\",\"panjud\":\"Não\",\"recusado\":\"Não\",\"observacoes\":\"...\"}]\n\n";
+  p += "LEMBRANÇAS DA IA:\n" + lembrancasAnteriores + "\n\n";
+  p += "BASE ESPECÍFICA:\n" + context + "\n\n";
+  p += "RESUMO MENSAL:\n" + JSON.stringify(summarizeForAI()) + "\n\n";
+  p += "METAS:\n" + JSON.stringify(metas) + "\n\n";
+  p += "SOLICITAÇÃO:\n" + userText;
+  
+  return p;
 }
 
 function appendMessage(sender, text) {
