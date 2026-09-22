@@ -15,12 +15,11 @@ let memoriaIA = JSON.parse(localStorage.getItem(MEMORIA_KEY) || '[]');
 let editUid = null, currentPage = 1, itemsPerPage = 15, metaSaveTimer = null, lastConfirmedMetas = JSON.parse(JSON.stringify(metas));
 let charts = {tipos:null, linha:null};
 let apiKey = localStorage.getItem(AI_KEY) || '';
-let chatHistory = [{role:'assistant', content:'Olá, Letícia! Eu sou a Aurora. ✦ Estou pronta para consultar a base, analisar indicadores e, com sua confirmação, cadastrar, editar ou excluir casos.'}];
+let chatHistory = [{role:'assistant', content:'Olá, Letícia! Eu sou a Aurora. ✦ Estou pronta para consultar a base, analisar indicadores e cadastrar ou editar casos.'}];
 
 const $ = id => document.getElementById(id);
 const monthName = m => MONTHS.find(x => x[0] === String(m))?.[1] || '—';
 
-// DATA OFICIAL LOCAL (AMERICA/FORTALEZA - UTC-3)
 function getTodayLocal() {
   try {
     return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Fortaleza' }).format(new Date());
@@ -185,7 +184,7 @@ async function loadCloud(initial=false) {
 }
 
 function fillMonths() {
-  const fm = $('filterMonth'), fr =$('mesReferenciaForm');
+  const fm = $('filterMonth'), fr = $('mesReferenciaForm');
   fm.innerHTML = MONTHS.map(([v,n]) => '<option value="' + v + '">' + n + '</option>').join('');
   fr.innerHTML = MONTHS.map(([v,n]) => '<option value="' + v + '">' + n + '</option>').join('');
   const now = getTodayLocal().split('-')[1];
@@ -207,7 +206,7 @@ function updateMetaInput() {
 function getFiltered() {
   const month = getSelectedMonth();
   let rows = bd.filter(d => getMesCorreto(d) === month);
-  const tipo = $('filterTipo').value, pan =$('filterEncerrado').value, q = $('searchInput').value.toLowerCase().trim(), st =$('searchType').value, dStart = $('dateStart').value, dEnd =$('dateEnd').value;
+  const tipo = $('filterTipo').value, pan = $('filterEncerrado').value, q = $('searchInput').value.toLowerCase().trim(), st = $('searchType').value, dStart = $('dateStart').value, dEnd = $('dateEnd').value;
   if(tipo !== 'Todos') rows = rows.filter(d => d.tipo === tipo);
   if(pan !== 'Todos') rows = rows.filter(d => d.panjud === pan);
   if(q) rows = rows.filter(d => String(st === 'id' ? d.id : d.processo).toLowerCase().includes(q));
@@ -268,7 +267,8 @@ function renderStatus(c) {
   const pct = c.meta > 0 ? c.reais / c.meta : 0;
   const box = $('statusBanner');
   box.className = 'status ' + (pct >= 1 ? 'status-100' : pct >= .9 ? 'status-90' : pct >= .8 ? 'status-80' : 'status-bad');
-  $('statusProgress').style.width = Math.min(100, pct * 100) + '\%';$('statusTitle').textContent = pct >= 1 ? 'Meta atingida — excelente!' : pct >= .9 ? 'Você está em 90% da meta (' + (pct * 100).toFixed(1) + '%).' : pct >= .8 ? 'Você chegou à faixa de 80% (' + (pct * 100).toFixed(1) + '%).' : 'Meta ainda não atingida (' + (pct * 100).toFixed(1) + '%).';
+  $('statusProgress').style.width = Math.min(100, pct * 100) + '%';
+  $('statusTitle').textContent = pct >= 1 ? 'Meta atingida — excelente!' : pct >= .9 ? 'Você está em 90% da meta (' + (pct * 100).toFixed(1) + '%).' : pct >= .8 ? 'Você chegou à faixa de 80% (' + (pct * 100).toFixed(1) + '%).' : 'Meta ainda não atingida (' + (pct * 100).toFixed(1) + '%).';
   $('statusSub').textContent = c.reais + ' reais de ' + c.meta + ' necessários • faltam ' + Math.max(0, c.faltaReais);
 }
 
@@ -290,10 +290,14 @@ function renderCharts(c) {
 
 function renderFinancial(c) {
   const f = calcFinancial(c);
-  $('val_real_onus').textContent = formatMoney(f.onus);$('val_real_acordo').textContent = formatMoney(f.acordo);
-  $('val_real_exito').textContent = formatMoney(f.exito);$('val_real_total').textContent = formatMoney(f.total);
-  $('val_100_onus').textContent = formatMoney(f.idealOnus);$('val_100_acordo').textContent = formatMoney(f.idealAcordo);
-  $('val_100_exito').textContent = formatMoney(f.idealExito);$('val_100_total').textContent = formatMoney(f.idealTotal);
+  $('val_real_onus').textContent = formatMoney(f.onus);
+  $('val_real_acordo').textContent = formatMoney(f.acordo);
+  $('val_real_exito').textContent = formatMoney(f.exito);
+  $('val_real_total').textContent = formatMoney(f.total);
+  $('val_100_onus').textContent = formatMoney(f.idealOnus);
+  $('val_100_acordo').textContent = formatMoney(f.idealAcordo);
+  $('val_100_exito').textContent = formatMoney(f.idealExito);
+  $('val_100_total').textContent = formatMoney(f.idealTotal);
 }
 
 function renderTable() {
@@ -395,8 +399,10 @@ function formData() {
 function clearForm() {
   editUid = null;
   $('processForm').reset();
-  $('dataEncerramento').value = getTodayLocal();$('mesReferenciaForm').value = getSelectedMonth();
-  $('formTitle').textContent = 'Novo registro';$('btnSubmit').textContent = '✓ Salvar registro';
+  $('dataEncerramento').value = getTodayLocal();
+  $('mesReferenciaForm').value = getSelectedMonth();
+  $('formTitle').textContent = 'Novo registro';
+  $('btnSubmit').textContent = '✓ Salvar registro';
   $('btnCancel').style.display = 'none';
   setTimeout(() => $('idCaso')?.focus(), 50);
 }
@@ -406,12 +412,15 @@ function startEdit(uidValue) {
   if(!r) return;
   editUid = uidValue;
   $('idCaso').value = r.id || '';
-  $('numProcesso').value = r.processo \vert{}\vert{} '';$('tipoEncerramento').value = r.tipo || 'Ônus';
+  $('numProcesso').value = r.processo || '';
+  $('tipoEncerramento').value = r.tipo || 'Ônus';
   $('dataEncerramento').value = normalizeDate(r.data);
-  $('mesReferenciaForm').value = getMesCorreto(r);$('panjud').value = r.panjud || 'Não';
+  $('mesReferenciaForm').value = getMesCorreto(r);
+  $('panjud').value = r.panjud || 'Não';
   $('recusado').value = r.recusado || 'Não';
   $('observacoes').value = r.observacoes || '';
-  $('formTitle').textContent = 'Editar registro';$('btnSubmit').textContent = '✓ Atualizar registro';
+  $('formTitle').textContent = 'Editar registro';
+  $('btnSubmit').textContent = '✓ Atualizar registro';
   $('btnCancel').style.display = 'inline-flex';
   document.getElementById('cadastro').scrollIntoView({behavior: 'smooth', block: 'start'});
   setTimeout(() => $('idCaso')?.focus(), 50);
@@ -419,7 +428,7 @@ function startEdit(uidValue) {
 
 async function handleSubmit(e) {
   e.preventDefault();
-  if($('panjud').value === 'Sim' &&$('recusado').value === 'Sim') {
+  if($('panjud').value === 'Sim' && $('recusado').value === 'Sim') {
     toast('error', 'Um caso não pode ser encerrado e recusado no Panjud ao mesmo tempo.');
     return;
   }
@@ -590,7 +599,7 @@ async function executeAIAction(a) {
       headers: {'Content-Type': 'text/plain;charset=utf-8'},
       body: JSON.stringify({acao: 'salvarMemoria', texto: a.texto})
     }).catch(err => console.log('Erro ao salvar memoria na nuvem:', err));
-    registrarLog('LEMBRAR (IA)', '-', `Anotação: ${a.texto}`);
+    registrarLog('LEMBRAR (IA)', '-', 'Anotação: ' + a.texto);
     return 'Memória salva.';
   }
   if(a.acao === 'cadastrar') {
@@ -630,21 +639,22 @@ async function executeAIAction(a) {
   }
 }
 
+// FUNÇÃO BUILPROMPT BLINDADA
 function buildPrompt(userText) {
   const mentions = bd.filter(c => String(userText).includes(String(c.id)) || String(userText).includes(String(c.processo || ''))).slice(0, 15);
   const context = mentions.length ? JSON.stringify(mentions) : 'Nenhum caso específico detectado.';
   const lembrancasAnteriores = memoriaIA.length > 0 ? memoriaIA.join(' | ') : 'Nenhuma memória registrada ainda.';
   
-  let p = 'Seu nome é Aurora. Você é a assistente administrativa do ERP da Letícia. Responda sempre de forma fofa, carinhosa, cheia de emojis fofos (💖, 🦄, ✨, 🌸) e com muito entusiasmo!\n\n';
-  p += 'REGRAS: "Encerramento real" significa panjud === Sim. Nunca invente dados.\n';
-  p += 'Para cadastrar, editar, apagar ou lembrar algo, gere OBRIGATORIAMENTE um bloco JSON com um array de ações.\n';
-  p += 'Formato: [{"acao":"cadastrar","id":"123","processo":"...","tipo":"Ônus","data":"2026-09-02","mesReferencia":"09","panjud":"Não","recusado":"Não","observacoes":"..."}]\n\n';
-  p += 'LEMBRANÇAS DA IA:\n' + lembrancasAnteriores + '\n\n';
-  p += 'BASE ESPECÍFICA:\n' + context + '\n\n';
-  p += 'RESUMO MENSAL:\n' + JSON.stringify(summarizeForAI()) + '\n\n';
-  p += 'METAS:\n' + JSON.stringify(metas) + '\n\n';
-  p += 'SOLICITAÇÃO:\n' + userText;
-  return p;
+  return [
+    'Seu nome é Aurora. Você é a assistente administrativa do ERP da Letícia. Responda com muito carinho e entusiasmo!',
+    'REGRAS: Encerramento real significa panjud === Sim. Nunca invente dados.',
+    'Para cadastrar, editar, apagar ou lembrar, gere OBRIGATORIAMENTE um bloco JSON com array de ações.',
+    'LEMBRANÇAS DA IA: ' + lembrancasAnteriores,
+    'BASE ESPECÍFICA: ' + context,
+    'RESUMO MENSAL: ' + JSON.stringify(summarizeForAI()),
+    'METAS: ' + JSON.stringify(metas),
+    'SOLICITAÇÃO: ' + userText
+  ].join('\n\n');
 }
 
 function appendMessage(sender, text) {
@@ -655,7 +665,7 @@ function appendMessage(sender, text) {
   msg.innerHTML = safeText(text);
   wrap.appendChild(msg);
   $('chatMessages').appendChild(wrap);
-  $('chatMessages').scrollTop =$('chatMessages').scrollHeight;
+  $('chatMessages').scrollTop = $('chatMessages').scrollHeight;
 }
 
 function stripJsonBlock(text) {
