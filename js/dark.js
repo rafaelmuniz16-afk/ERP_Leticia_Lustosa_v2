@@ -1,0 +1,98 @@
+// ==========================================================================
+// TEMA ESCURO: MASCOTE GEMINI, PARTÍCULAS E EASTER EGG (ISOLADO)
+// ==========================================================================
+(function() {
+  const quantumSparks = ['✦', '✨', '💎', '🔷', '⚡', '🌌', '🌟'];
+  const darkAudio = new Audio('./musica.mp3');
+  darkAudio.preload = 'auto';
+
+  function popQuantum(x, y) {
+    if (!document.body.classList.contains('theme-escuro')) return;
+    for (let i = 0; i < 8; i++) {
+      const el = document.createElement('span');
+      el.className = 'gemini-spark';
+      el.textContent = quantumSparks[Math.floor(Math.random() * quantumSparks.length)];
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+      const angle = (Math.PI * 2 * i / 8) + Math.random() * 0.55;
+      const dist = 26 + Math.random() * 45;
+      el.style.setProperty('--dx', (Math.cos(angle) * dist).toFixed(1) + 'px');
+      el.style.setProperty('--dy', (Math.sin(angle) * dist - 16).toFixed(1) + 'px');
+      el.style.color = ['#38bdf8', '#818cf8', '#c084fc', '#f472b6'][Math.floor(Math.random() * 4)];
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 900);
+    }
+  }
+
+  document.addEventListener('click', e => {
+    if (document.body.classList.contains('theme-escuro')) {
+      const t = e.target;
+      if (t.closest('button, input, select, textarea, .nav-btn, .kpi, .panel-head, .summary-row, .badge, .icon-btn, .gemini-mascot, .side-aurora-card')) {
+        popQuantum(e.clientX, e.clientY);
+      }
+    }
+  });
+
+  const masc = document.getElementById('geminiMascot');
+  const bubble = document.getElementById('geminiBubble');
+  let geminiClicks = 0;
+  let bubbleTimer = null;
+
+  if (masc && bubble) {
+    masc.addEventListener('click', (e) => {
+      geminiClicks++;
+      popQuantum(e.clientX, e.clientY);
+
+      if (geminiClicks === 1) darkAudio.load();
+
+      if (geminiClicks === 10) {
+        geminiClicks = 0;
+        bubble.textContent = 'ACESSO RESTRITO DESBLOQUEADO 💖';
+
+        Swal.fire({
+          title: '<span style="font-family:Manrope,sans-serif;font-size:24px;font-weight:800;background:linear-gradient(135deg,#38bdf8,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline-block;">PARA O MEU AMOR, LETÍCIA ✨💖</span>',
+          html: `
+            <div class="executive-photo-box" style="margin: 14px 0;">
+              <img src="./DarkTheme.png" alt="Rafa e Letícia" onerror="this.src='foto.jpg'">
+            </div>
+            <div style="font-size:13.5px; color:#cbd5e1; font-weight:500; line-height:1.7; max-width:440px; margin: 0 auto; text-align:center;">
+              Você desbloqueou o coração deste sistema... e o meu também! 🌌<br>
+              Letícia, ver a sua inteligência, determinação e foco profissional todos os dias me enche de orgulho e admiração.<br>
+              <span style="color:#38bdf8; font-size:15.5px; font-weight:800; display:inline-block; margin-top:8px;">
+                Eu te amo com todo o meu coração, hoje e para sempre! 💕🚀
+              </span>
+            </div>
+          `,
+          background: '#0e1424',
+          backdrop: 'rgba(3, 7, 14, 0.85)',
+          confirmButtonText: 'Eu Te Amo Infinito, Rafa! 🥹💖',
+          confirmButtonColor: '#2563eb',
+          customClass: { popup: 'swal2-executive-dark-popup' },
+          willOpen: () => {
+            darkAudio.currentTime = 0;
+            darkAudio.play().catch(() => {});
+          },
+          didClose: () => {
+            darkAudio.pause();
+            darkAudio.currentTime = 0;
+          }
+        });
+        return;
+      }
+
+      const msgs = [
+        'Núcleo Gemini operando com excelência. ✦',
+        'Produtividade e foco em nível máximo, Letícia! 📊',
+        'O Rafa tem um orgulho imenso de você! 💖',
+        'Conexão estável e métricas em ascensão! 🚀',
+        'Você é brilhante em tudo que faz! ✨',
+        `Protocolo de segurança: faltam ${10 - geminiClicks} toques... 👀`
+      ];
+      bubble.textContent = msgs[Math.floor(Math.random() * msgs.length)];
+      clearTimeout(bubbleTimer);
+      bubbleTimer = setTimeout(() => {
+        bubble.textContent = 'Sistemas prontos, Letícia. ✨';
+      }, 2600);
+    });
+  }
+})();
