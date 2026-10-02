@@ -20,6 +20,51 @@ let chatHistory = [{role:'assistant', content:'Olá, Letícia! Eu sou a Aurora. 
 const $ = id => document.getElementById(id);
 const monthName = m => MONTHS.find(x => x[0] === String(m))?.[1] || '—';
 
+// ==========================================
+// UTILITÁRIO: MÁSCARA E VALIDAÇÃO CNJ
+// Padrão: NNNNNNN-DD.AAAA.J.TR.OOOO (20 dígitos)
+// ==========================================
+function formatarProcessoCNJ(valor) {
+  if (!valor) return '';
+  const digitos = valor.toString().replace(/\D/g, '').slice(0, 20);
+  let res = digitos;
+  if (digitos.length > 7) {
+    res = digitos.slice(0, 7) + '-' + digitos.slice(7);
+  }
+  if (digitos.length > 9) {
+    res = res.slice(0, 10) + '.' + digitos.slice(9);
+  }
+  if (digitos.length > 13) {
+    res = res.slice(0, 15) + '.' + digitos.slice(13);
+  }
+  if (digitos.length > 14) {
+    res = res.slice(0, 17) + '.' + digitos.slice(14);
+  }
+  if (digitos.length > 16) {
+    res = res.slice(0, 20) + '.' + digitos.slice(16, 20);
+  }
+  return res;
+}
+
+function validarDigitoCNJ(numeroCompleto) {
+  const digitos = (numeroCompleto || '').replace(/\D/g, '');
+  if (digitos.length !== 20) return false;
+
+  const n = digitos.slice(0, 7);
+  const d = digitos.slice(7, 9);
+  const a = digitos.slice(9, 13);
+  const j = digitos.slice(13, 14);
+  const tr = digitos.slice(14, 16);
+  const o = digitos.slice(16, 20);
+
+  try {
+    const dividendo = BigInt(`${n}${a}${j}${tr}${o}${d}`);
+    return (dividendo % 97n) === 1n;
+  } catch (e) {
+    return false;
+  }
+}
+
 function getTodayLocal() {
   try {
     return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Fortaleza' }).format(new Date());
@@ -412,7 +457,7 @@ function startEdit(uidValue) {
   if(!r) return;
   editUid = uidValue;
   $('idCaso').value = r.id || '';
-  $('numProcesso').value = r.processo || '';
+  $('numProcesso').value = formatarProcessoCNJ(r.processo || '');
   $('tipoEncerramento').value = r.tipo || 'Ônus';
   $('dataEncerramento').value = normalizeDate(r.data);
   $('mesReferenciaForm').value = getMesCorreto(r);
@@ -437,6 +482,29 @@ async function handleSubmit(e) {
     toast('warning', 'Preencha ID e número do processo.');
     return;
   }
+
+  // Validação do padrão CNJ (20 dígitos obrigatórios)
+  const digitosProc = data.processo.replace(/\D/g, '');
+  if(digitosProc.length !== 20) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Processo Incompleto',
+      text: 'O número do processo deve ter exatamente 20 dígitos no padrão CNJ (0000000-00.0000.0.00.0000).',
+      confirmButtonColor: '#4f46e5'
+    });
+    return;
+  }
+
+  if(!validarDigitoCNJ(data.processo)) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Dígito Verificador Inválido',
+      text: 'Os dígitos verificadores do processo CNJ estão incorretos.',
+      confirmButtonColor: '#dc3f5a'
+    });
+    return;
+  }
+
   try {
     setLoading(true, editUid ? 'Atualizando registro…' : 'Salvando registro…');
     if(editUid) {
@@ -605,7 +673,7 @@ async function executeAIAction(a) {
   if(a.acao === 'cadastrar') {
     const rec = {
       id: String(a.id),
-      processo: String(a.processo),
+      processo: formatarProcessoCNJ(String(a.processo)),
       tipo: a.tipo,
       data: normalizeDate(a.data) || getTodayLocal(),
       mesReferencia: String(a.mesReferencia || getSelectedMonth()).padStart(2,'0'),
@@ -623,6 +691,7 @@ async function executeAIAction(a) {
   if(a.acao === 'editar') {
     const next = {...v.next};
     delete next.acao;
+    if(next.processo) next.processo = formatarProcessoCNJ(next.processo);
     await editServer(next);
     const idx = bd.findIndex(r => String(r._uid) === String(v.record._uid));
     if(idx >= 0) bd[idx] = next;
@@ -639,7 +708,6 @@ async function executeAIAction(a) {
   }
 }
 
-// FUNÇÃO BUILPROMPT BLINDADA
 function buildPrompt(userText) {
   const mentions = bd.filter(c => String(userText).includes(String(c.id)) || String(userText).includes(String(c.processo || ''))).slice(0, 15);
   const context = mentions.length ? JSON.stringify(mentions) : 'Nenhum caso específico detectado.';
@@ -665,7 +733,7 @@ function appendMessage(sender, text) {
   msg.innerHTML = safeText(text);
   wrap.appendChild(msg);
   $('chatMessages').appendChild(wrap);
-  $('chatMessages').scrollTop = $('chatMessages').scrollHeight;
+  $('chatMessages').scrollTop =$('chatMessages').scrollHeight;
 }
 
 function stripJsonBlock(text) {
@@ -870,6 +938,40 @@ function bind() {
     const v = $('dataEncerramento').value;
     if(v) $('mesReferenciaForm').value = v.split('-')[1];
   });
+
+  // MÁSCARA INTELIGENTE NO CAMPO NUMPROCESSO
+  const inputProcesso = $('numProcesso');
+  if(inputProcesso) {
+    inputProcesso.setAttribute('maxlength', '25');
+    inputProcesso.setAttribute('placeholder', '0000000-00.0000.0.00.0000');
+    inputProcesso.addEventListener('input', (e) => {
+      e.target.value = formatarProcessoCNJ(e.target.value);
+    });
+    inputProcesso.addEventListener('blur', (e) => {
+      const valor = e.target.value.trim();
+      const digitos = valor.replace(/\D/g, '');
+      if(digitos.length > 0 && digitos.length < 20) {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'warning',
+          title: 'Número CNJ incompleto (faltam dígitos)',
+          showConfirmButton: false,
+          timer: 3000
+        });
+      } else if(digitos.length === 20 && !validarDigitoCNJ(valor)) {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'error',
+          title: 'Dígito verificador CNJ inválido',
+          showConfirmButton: false,
+          timer: 3000
+        });
+      }
+    });
+  }
+
   $('processForm').addEventListener('submit', handleSubmit);
   $('btnCancel').addEventListener('click', clearForm);
   $('btnReset').addEventListener('click', clearForm);
