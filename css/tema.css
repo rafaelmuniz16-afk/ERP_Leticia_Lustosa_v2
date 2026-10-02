@@ -1,59 +1,150 @@
 /* ============================================================ */
-/* LAYOUT VERTICAL (RESPONSIVO)                                 */
+/* ARQUITETURA MULTITEMA - VARIÁVEIS E CORES                    */
+/* ============================================================ */
+
+/* 1. TEMA CLARO (PADRÃO / FOFO) */
+body.theme-claro {
+  --bg: #fff7fc; --surface: #ffffff; --surface-2: #fffafd; --surface-3: #fff0f8;
+  --line: #f0d6e8; --text: #4a3550; --muted: #8e718b; --primary: #d85c9d; --primary-2: #9b74e8;
+  --success: #52b788; --warning: #f2a65a; --danger: #e76f93; --info: #79aee8;
+  --shadow: 0 14px 40px rgba(169,92,151,.11); --radius: 20px; --sidebar: 272px;
+  --sidebar-bg: linear-gradient(180deg,#5d4568 0%,#74527d 56%,#8a5a85 100%);
+  --sidebar-color: #dce5f3;
+  background: radial-gradient(circle at 10% 10%,rgba(255,214,240,.62),transparent 22%), radial-gradient(circle at 90% 8%,rgba(221,207,255,.55),transparent 20%), linear-gradient(180deg,#fff9fd 0%,#fff6fb 100%);
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* 2. TEMA ESCURO (AURORA PRIME) */
+body.theme-escuro {
+  --bg: #07090e; --surface: rgba(14, 18, 29, 0.85); --surface-2: rgba(19, 26, 42, 0.85); --surface-3: rgba(26, 35, 58, 0.6);
+  --line: rgba(255, 255, 255, 0.08); --text: #f0f4fc; --muted: #8899b5; --primary: #38bdf8; --primary-2: #9d6eff;
+  --success: #10b981; --warning: #f59e0b; --danger: #f43f5e; --info: #38bdf8;
+  --shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.65); --radius: 14px; --sidebar: 274px;
+  --sidebar-bg: rgba(9, 12, 20, 0.95); --sidebar-color: #f8fafc;
+  background: #07090e;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* 3. ANO NOVO (RÉVEILLON) */
+body.theme-anonovo {
+  --bg: #05070d; --surface: #0a0e19; --surface-2: #111728; --surface-3: #182035;
+  --line: rgba(226, 185, 110, 0.22); --text: #f5f7fa; --muted: #a3b0c9; --primary: #f5d179; --primary-2: #e5b342;
+  --success: #3dd598; --warning: #ffb03a; --danger: #ff5c75; --info: #48a7ff;
+  --shadow: 0 16px 40px rgba(0,0,0,0.55); --radius: 18px; --sidebar: 276px;
+  --sidebar-bg: linear-gradient(180deg, #090e1a 0%, #060912 60%, #04050a 100%); --sidebar-color: #e2e8f0;
+  background: radial-gradient(circle at 50% 0%, #151d33 0%, #060810 65%, #030408 100%);
+}
+
+/* 4. CYBERPUNK */
+body.theme-cyberpunk {
+  --bg: #03060d; --surface: #070c18; --surface-2: #0d1527; --surface-3: #141f38;
+  --line: rgba(0, 243, 255, 0.3); --text: #e6f1ff; --muted: #7990b5; --primary: #00f3ff; --primary-2: #ff0055;
+  --success: #00ff88; --warning: #ffe600; --danger: #ff0055; --info: #00f3ff;
+  --shadow: 0 16px 45px rgba(0,0,0,0.85); --radius: 12px; --sidebar: 276px;
+  --sidebar-bg: linear-gradient(180deg, #070e1c 0%, #040812 65%, #020408 100%); --sidebar-color: #00f3ff;
+  background: radial-gradient(circle at 50% 10%, #0d1a33 0%, #050a14 55%, #020408 100%);
+}
+
+/* 5. FESTA JUNINA */
+body.theme-festajunina {
+  --bg: #fffbf2; --surface: #ffffff; --surface-2: #fff8e8; --surface-3: #fef3c7;
+  --line: #f3dfba; --text: #451a03; --muted: #854d0e; --primary: #ea580c; --primary-2: #dc2626;
+  --success: #15803d; --warning: #f59e0b; --danger: #dc2626; --info: #0284c7;
+  --shadow: 0 10px 25px -4px rgba(180, 83, 9, 0.12); --radius: 20px; --sidebar: 280px;
+  --sidebar-bg: linear-gradient(180deg, #fffcf5 0%, #fff7e6 100%); --sidebar-color: #ea580c;
+  background: #fffbf2;
+}
+
+/* 6. HALLOWEEN */
+body.theme-halloween {
+  --bg: #07050a; --surface: #0e0915; --surface-2: #160e22; --surface-3: #1f1430;
+  --line: rgba(255, 120, 31, 0.28); --text: #f7f2fc; --muted: #a69bb5; --primary: #ff781f; --primary-2: #9d4edd;
+  --success: #00ff9d; --warning: #ffaa00; --danger: #ff3366; --info: #805ad5;
+  --shadow: 0 16px 45px rgba(0,0,0,0.85); --radius: 18px; --sidebar: 276px;
+  --sidebar-bg: linear-gradient(180deg, #100a1a 0%, #09060f 65%, #040208 100%); --sidebar-color: #ff781f;
+  background: radial-gradient(circle at 50% 0%, #1c0f2e 0%, #0c0714 55%, #050308 100%);
+}
+
+/* 7. PÁSCOA */
+body.theme-pascoa {
+  --bg: #faf7f2; --surface: #ffffff; --surface-2: #fbf9f5; --surface-3: #f5efe6;
+  --line: #ebdcd0; --text: #45342b; --muted: #8c7365; --primary: #f472b6; --primary-2: #a855f7;
+  --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --info: #0ea5e9;
+  --shadow: 0 14px 40px rgba(180, 140, 115, 0.12); --radius: 20px; --sidebar: 276px;
+  --sidebar-bg: linear-gradient(180deg, #6b4d57 0%, #7d5966 50%, #8c6373 100%); --sidebar-color: #fbcfe8;
+  background: radial-gradient(circle at 10% 10%, rgba(254,240,138,0.4), transparent 25%), linear-gradient(180deg, #fdfbf7 0%, #f7f2ea 100%);
+}
+
+/* 8. NATAL */
+body.theme-natal {
+  --bg: #f7faf8; --surface: #ffffff; --surface-2: #fcfdfd; --surface-3: #f0f7f3;
+  --line: #e3ede6; --text: #1d3326; --muted: #587565; --primary: #c41e3a; --primary-2: #165b33;
+  --success: #1b8a4f; --warning: #d97706; --danger: #c41e3a; --info: #0284c7;
+  --shadow: 0 14px 40px rgba(22, 91, 51, 0.08); --radius: 20px; --sidebar: 272px;
+  --sidebar-bg: linear-gradient(180deg, #103822 0%, #174b2f 52%, #1b3d2b 100%); --sidebar-color: #e5f4ec;
+  background: radial-gradient(circle at 10% 10%, rgba(196,30,58,.08), transparent 26%), linear-gradient(180deg, #fbfdfc 0%, #f4f8f5 100%);
+}
+
+/* 9. TERROR */
+body.theme-terror {
+  --bg: #050406; --surface: #0a060a; --surface-2: #140b12; --surface-3: #1f0f1b;
+  --line: rgba(230, 0, 26, 0.38); --text: #f0e6e8; --muted: #9e7f87; --primary: #e6001a; --primary-2: #6e000d;
+  --success: #00ff73; --warning: #ff9900; --danger: #ff0022; --info: #9d00ff;
+  --shadow: 0 20px 60px rgba(0,0,0,0.95); --radius: 16px; --sidebar: 276px;
+  --sidebar-bg: linear-gradient(180deg, #0e0509 0%, #080306 65%, #020103 100%); --sidebar-color: #ff4d61;
+  background: radial-gradient(circle at 50% 10%, #29080c 0%, #0d0408 55%, #030104 100%);
+}
+
+/* ============================================================ */
+/* OCULTAÇÃO INTELIGENTE DAS ANIMAÇÕES E MASCOTES               */
+/* ============================================================ */
+.theme-layer { display: none !important; }
+body.theme-claro .layer-claro { display: flex !important; }
+body.theme-escuro .layer-escuro { display: flex !important; }
+body.theme-anonovo .layer-anonovo { display: flex !important; }
+body.theme-cyberpunk .layer-cyberpunk { display: flex !important; }
+body.theme-festajunina .layer-festajunina { display: flex !important; }
+body.theme-halloween .layer-halloween { display: flex !important; }
+body.theme-pascoa .layer-pascoa { display: flex !important; }
+body.theme-natal .layer-natal { display: flex !important; }
+body.theme-terror .layer-terror { display: flex !important; }
+
+/* Canvas (precisam ser display block) */
+canvas.theme-layer { display: none !important; }
+body.theme-anonovo canvas.layer-anonovo { display: block !important; }
+body.theme-cyberpunk canvas.layer-cyberpunk { display: block !important; }
+body.theme-halloween canvas.layer-halloween { display: block !important; }
+body.theme-pascoa canvas.layer-pascoa { display: block !important; }
+body.theme-terror canvas.layer-terror { display: block !important; }
+
+/* ============================================================ */
+/* LAYOUT VERTICAL E MENU DE TEMAS                              */
 /* ============================================================ */
 body.layout-vertical .app { display: block !important; }
 body.layout-vertical .sidebar {
-  position: static !important;
-  width: 100% !important;
-  height: auto !important;
-  padding: 16px 20px !important;
-  box-shadow: 0 6px 24px rgba(0,0,0,0.16) !important;
-  overflow-y: visible !important;
-  border-radius: 0 0 24px 24px !important;
+  position: static !important; width: 100% !important; height: auto !important;
+  border-radius: 0 0 24px 24px !important; overflow-y: visible !important;
 }
 body.layout-vertical .sidebar .brand { padding-bottom: 12px !important; justify-content: center !important; }
 body.layout-vertical .sidebar .side-section { display: none !important; }
-body.layout-vertical .sidebar .nav {
-  flex-direction: row !important;
-  overflow-x: auto !important;
-  gap: 8px !important;
-  padding-bottom: 6px !important;
-}
-body.layout-vertical .sidebar .nav-btn { white-space: nowrap !important; padding: 8px 14px !important; }
-body.layout-vertical .main { padding: 24px 20px 70px !important; }
+body.layout-vertical .sidebar .nav { flex-direction: row !important; overflow-x: auto !important; }
 
-/* ============================================================ */
-/* ESTILO DO MODAL DE CONFIGURAÇÕES                             */
-/* ============================================================ */
 .theme-card-option {
-  border: 2px solid var(--line, #e2e8f0);
+  border: 1px solid var(--line);
   border-radius: 12px;
-  padding: 12px;
-  background: var(--surface-2, #f8fafc);
+  padding: 10px;
+  background: var(--surface-2);
   cursor: pointer;
-  text-align: center;
+  display: flex;
+  align-items: center;
   transition: all 0.2s;
 }
-.theme-card-option:hover {
-  transform: translateY(-2px);
-  border-color: var(--primary, #3b82f6);
-}
 .theme-card-option.active {
-  border-color: var(--primary, #3b82f6);
-  background: var(--surface-3, #eff6ff);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  border-width: 2px;
+  background: var(--surface-3);
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.1);
 }
 
-/* ============================================================ */
-/* OCULTAÇÃO DE ELEMENTOS INCOMPATÍVEIS                         */
-/* ============================================================ */
-/* Isso garante que se você colar os 9 mascotes/canvas no index, apenas o ativo apareça */
-body:not(.theme-claro) #canvas-claro, body:not(.theme-claro) #mascot-claro { display: none !important; }
-body:not(.theme-escuro) #canvas-escuro, body:not(.theme-escuro) #mascot-escuro { display: none !important; }
-body:not(.theme-anonovo) #canvas-anonovo, body:not(.theme-anonovo) #mascot-anonovo { display: none !important; }
-body:not(.theme-cyberpunk) #canvas-cyberpunk, body:not(.theme-cyberpunk) #mascot-cyberpunk { display: none !important; }
-body:not(.theme-festajunina) #canvas-festajunina, body:not(.theme-festajunina) #mascot-festajunina { display: none !important; }
-body:not(.theme-halloween) #canvas-halloween, body:not(.theme-halloween) #mascot-halloween { display: none !important; }
-body:not(.theme-pascoa) #canvas-pascoa, body:not(.theme-pascoa) #mascot-pascoa { display: none !important; }
-body:not(.theme-natal) #canvas-natal, body:not(.theme-natal) #mascot-natal { display: none !important; }
-body:not(.theme-terror) #canvas-terror, body:not(.theme-terror) #mascot-terror { display: none !important; }
+/* BORDAS E DETALHES GERAIS ADAPTÁVEIS */
+.panel, .kpi, .side-card, .sidebar, .status, .filters { border-color: var(--line) !important; background: var(--surface) !important; color: var(--text) !important; }
+.btn-primary { background: var(--primary) !important; border-color: var(--primary-2) !important; }
