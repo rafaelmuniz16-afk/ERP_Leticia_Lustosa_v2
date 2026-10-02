@@ -1,7 +1,7 @@
 /* ==========================================================================
-   TEMA ESCURO (ENTERPRISE DARK EDITION)
+   TEMA ESCURO ORIGINAL (ENTERPRISE DARK EDITION 2026)
    ========================================================================== */
-body.theme-escuro {
+:root {
   --bg-primary: #07090e;
   --bg-surface: rgba(14, 18, 29, 0.75);
   --bg-surface-elevated: rgba(19, 26, 42, 0.85);
@@ -31,12 +31,10 @@ body.theme-escuro {
   
   --glass-blur: blur(16px);
   --shadow-card: 0 16px 40px -12px rgba(0, 0, 0, 0.65), 0 0 0 1px var(--line-subtle);
-  
-  background-color: var(--bg-primary) !important;
-  color: var(--text-main) !important;
+  --sidebar-w: 274px;
 }
 
-/* Esconde elementos do unicórnio e mostra os do tema escuro */
+/* Ocultação cruzada de temas */
 body.theme-escuro .unicorn-mascot,
 body.theme-escuro .cute-bg {
   display: none !important;
@@ -47,60 +45,41 @@ body:not(.theme-escuro) .gemini-mascot {
   display: none !important;
 }
 
-/* Sidebar e Header no Tema Escuro */
-body.theme-escuro .sidebar {
-  background: rgba(9, 12, 20, 0.88) !important;
-  backdrop-filter: var(--glass-blur);
-  border-right: 1px solid var(--line-subtle) !important;
-  color: #fff !important;
-}
-
-body.theme-escuro .page-title {
-  background: linear-gradient(135deg, #ffffff 30%, #c3d4f2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-body.theme-escuro .panel,
-body.theme-escuro .kpi,
-body.theme-escuro .side-card,
-body.theme-escuro .status,
-body.theme-escuro .filters,
-body.theme-escuro .floating-window {
-  background: var(--bg-surface) !important;
-  border-color: var(--line-subtle) !important;
+/* Fundo Geral e Tipografia */
+body.theme-escuro {
+  background-color: var(--bg-primary) !important;
   color: var(--text-main) !important;
-  box-shadow: var(--shadow-card) !important;
 }
 
-body.theme-escuro .control {
-  background: rgba(9, 13, 22, 0.7) !important;
-  border-color: var(--line-subtle) !important;
-  color: #fff !important;
-}
-
-body.theme-escuro .control:focus {
-  border-color: var(--gemini-blue) !important;
-  box-shadow: 0 0 0 3px rgba(79, 134, 247, 0.18) !important;
-}
-
-body.theme-escuro .btn-primary {
-  background: linear-gradient(135deg, #2563eb, #7c3aed) !important;
-  border: 1px solid rgba(124, 58, 237, 0.4) !important;
-  color: #fff !important;
-}
-
-/* Ambient Lighting Orbs */
+/* Iluminação de Fundo e Malha */
 .ambient-lighting {
-  position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
 }
 .light-orb {
-  position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.28;
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.28;
+  pointer-events: none;
   animation: orbDrift 22s ease-in-out infinite alternate;
 }
-.orb-1 { width: 520px; height: 520px; background: #38bdf8; top: -140px; left: 5%; }
-.orb-2 { width: 620px; height: 620px; background: #9d6eff; bottom: -160px; right: 2%; opacity: 0.2; }
-.orb-3 { width: 440px; height: 440px; background: #4f86f7; top: 38%; left: 45%; opacity: 0.16; }
+.orb-1 { width: 520px; height: 520px; background: #38bdf8; top: -140px; left: 5%; animation-duration: 18s; }
+.orb-2 { width: 620px; height: 620px; background: #9d6eff; bottom: -160px; right: 2%; animation-duration: 25s; opacity: 0.2; }
+.orb-3 { width: 440px; height: 440px; background: #4f86f7; top: 38%; left: 45%; animation-duration: 22s; opacity: 0.16; }
+
+.grid-mesh {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(circle at 50% 30%, black 20%, transparent 80%);
+}
 
 @keyframes orbDrift {
   0% { transform: translate(0, 0) scale(1); }
@@ -108,39 +87,285 @@ body.theme-escuro .btn-primary {
   100% { transform: translate(-25px, -30px) scale(0.95); }
 }
 
+/* Sidebar Dark */
+body.theme-escuro .sidebar {
+  background: rgba(9, 12, 20, 0.82) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border-right: 1px solid var(--line-subtle) !important;
+  color: #fff !important;
+}
+
+body.theme-escuro .sidebar .brand {
+  border-bottom: 1px solid var(--line-subtle) !important;
+}
+
+body.theme-escuro .sidebar .brand-mark {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(157, 110, 255, 0.15)) !important;
+  border: 1px solid rgba(56, 189, 248, 0.35) !important;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.2) !important;
+}
+
+body.theme-escuro .sidebar .brand-title {
+  color: #fff !important;
+}
+
+body.theme-escuro .sidebar .brand-sub {
+  color: var(--gemini-cyan) !important;
+}
+
+body.theme-escuro .sidebar .side-section {
+  color: var(--text-dim) !important;
+}
+
+body.theme-escuro .sidebar .nav-btn {
+  color: var(--text-muted) !important;
+}
+body.theme-escuro .sidebar .nav-btn:hover {
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: var(--text-main) !important;
+  border-color: var(--line-subtle) !important;
+}
+body.theme-escuro .sidebar .nav-btn.active {
+  background: linear-gradient(90deg, rgba(79, 134, 247, 0.15), rgba(157, 110, 255, 0.05)) !important;
+  border-color: rgba(79, 134, 247, 0.4) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 20px rgba(79, 134, 247, 0.12) !important;
+}
+
+/* Card Aurora Live Dark */
+body.theme-escuro .side-aurora-card {
+  background: linear-gradient(145deg, rgba(19, 26, 42, 0.9), rgba(13, 17, 28, 0.95)) !important;
+  border: 1px solid var(--line-highlight) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
+}
+body.theme-escuro .side-aurora-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--gemini-gradient);
+}
+body.theme-escuro .side-aurora-avatar {
+  background: var(--gemini-gradient) !important;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.5) !important;
+}
+body.theme-escuro .side-aurora-name {
+  color: #fff !important;
+}
+body.theme-escuro .side-aurora-tag {
+  background: rgba(56, 189, 248, 0.15) !important;
+  color: var(--gemini-cyan) !important;
+  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+}
+body.theme-escuro .side-aurora-msg {
+  color: var(--text-muted) !important;
+}
+
+/* Card Status Conexão */
+body.theme-escuro .side-card {
+  background: rgba(14, 18, 29, 0.6) !important;
+  border: 1px solid var(--line-subtle) !important;
+}
+body.theme-escuro .side-card-title {
+  color: var(--text-dim) !important;
+}
+
+/* Título Superior e Ações */
+body.theme-escuro .page-title {
+  background: linear-gradient(135deg, #ffffff 30%, #c3d4f2 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+body.theme-escuro .page-subtitle {
+  color: var(--text-muted) !important;
+}
+body.theme-escuro .eyebrow {
+  color: var(--gemini-cyan) !important;
+}
+
+body.theme-escuro .btn {
+  border: 1px solid var(--line-subtle) !important;
+  background: var(--bg-surface-elevated) !important;
+  color: var(--text-main) !important;
+}
+body.theme-escuro .btn:hover {
+  border-color: var(--line-highlight) !important;
+  background: rgba(28, 38, 62, 0.9) !important;
+  color: #fff !important;
+}
+body.theme-escuro .btn-primary {
+  background: linear-gradient(135deg, #2563eb, #7c3aed) !important;
+  border: 1px solid rgba(124, 58, 237, 0.4) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 18px rgba(79, 134, 247, 0.28) !important;
+}
+
+/* Filtros, Painéis e KPIs */
+body.theme-escuro .filters,
+body.theme-escuro .status,
+body.theme-escuro .panel,
+body.theme-escuro .kpi,
+body.theme-escuro .floating-window {
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--line-subtle) !important;
+  box-shadow: var(--shadow-card) !important;
+  color: var(--text-main) !important;
+}
+
+body.theme-escuro .control {
+  border: 1px solid var(--line-subtle) !important;
+  background: rgba(9, 13, 22, 0.7) !important;
+  color: var(--text-main) !important;
+}
+body.theme-escuro .control:focus {
+  border-color: var(--gemini-blue) !important;
+  box-shadow: 0 0 0 3px rgba(79, 134, 247, 0.18) !important;
+}
+
+body.theme-escuro .panel-head {
+  background: rgba(255, 255, 255, 0.015) !important;
+  border-bottom: 1px solid var(--line-subtle) !important;
+}
+body.theme-escuro .panel-title {
+  color: #fff !important;
+}
+
+body.theme-escuro .summary-row {
+  border: 1px solid var(--line-subtle) !important;
+  background: rgba(9, 13, 22, 0.5) !important;
+  color: var(--text-muted) !important;
+}
+body.theme-escuro .summary-row strong {
+  color: #fff !important;
+}
+body.theme-escuro .summary-highlight {
+  border-color: rgba(79, 134, 247, 0.35) !important;
+  background: rgba(79, 134, 247, 0.08) !important;
+}
+body.theme-escuro .summary-highlight strong {
+  color: var(--gemini-cyan) !important;
+}
+
+body.theme-escuro .money-row {
+  border-bottom: 1px dashed var(--line-subtle) !important;
+  color: var(--text-muted) !important;
+}
+body.theme-escuro .money-row strong {
+  color: #fff !important;
+}
+body.theme-escuro .money-total strong {
+  color: var(--gemini-cyan) !important;
+  text-shadow: 0 0 15px rgba(56, 189, 248, 0.3) !important;
+}
+
+body.theme-escuro .table th {
+  background: rgba(14, 18, 29, 0.95) !important;
+  color: var(--text-dim) !important;
+  border-bottom: 1px solid var(--line-subtle) !important;
+}
+body.theme-escuro .table td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.035) !important;
+  color: var(--text-main) !important;
+}
+body.theme-escuro .table tr:hover td {
+  background: rgba(255, 255, 255, 0.025) !important;
+}
+
 /* Mascote Gemini */
 @keyframes geminiPulseGlow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.5), 0 10px 30px rgba(124, 58, 237, 0.35); transform: scale(1); }
-  50% { box-shadow: 0 0 25px 6px rgba(157, 110, 255, 0.45), 0 14px 40px rgba(56, 189, 248, 0.5); transform: scale(1.05); }
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.5), 0 10px 30px rgba(124, 58, 237, 0.35);
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    box-shadow: 0 0 25px 6px rgba(157, 110, 255, 0.45), 0 14px 40px rgba(56, 189, 248, 0.5);
+    transform: scale(1.05) translateY(-4px);
+  }
 }
+
 .gemini-mascot {
-  position: fixed; right: 26px; bottom: 26px; width: 60px; height: 60px; border-radius: 20px;
+  position: fixed;
+  right: 26px;
+  bottom: 26px;
+  width: 60px;
+  height: 60px;
+  border-radius: 20px;
   background: linear-gradient(135deg, rgba(20, 28, 48, 0.95), rgba(10, 14, 24, 0.95));
-  border: 1px solid rgba(79, 134, 247, 0.5); display: grid; place-items: center; z-index: 45;
-  cursor: pointer; animation: geminiPulseGlow 4s infinite ease-in-out; transition: transform 0.2s;
+  border: 1px solid rgba(79, 134, 247, 0.5);
+  display: grid;
+  place-items: center;
+  z-index: 45;
+  cursor: pointer;
+  animation: geminiPulseGlow 4s infinite ease-in-out;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
 }
-.gemini-mascot:hover { transform: scale(1.12); border-color: var(--gemini-cyan); }
-.gemini-svg { width: 32px; height: 32px; filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.7)); }
+.gemini-mascot:hover {
+  transform: scale(1.12) translateY(-4px);
+  border-color: var(--gemini-cyan);
+}
+.gemini-svg {
+  width: 32px;
+  height: 32px;
+  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.7));
+}
 .gemini-mascot .bubble {
-  position: absolute; bottom: 74px; right: 0; background: rgba(14, 20, 34, 0.92);
-  border: 1px solid var(--line-highlight); border-radius: 14px; padding: 8px 14px;
-  font-size: 11.5px; color: #fff; font-weight: 700; white-space: nowrap; pointer-events: none;
+  position: absolute;
+  bottom: 74px;
+  right: 0;
+  background: rgba(14, 20, 34, 0.92);
+  border: 1px solid var(--line-highlight);
+  border-radius: 14px;
+  padding: 8px 14px;
+  font-size: 11.5px;
+  color: #fff;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(56, 189, 248, 0.2);
+  pointer-events: none;
 }
 
 .gemini-spark {
-  position: fixed; pointer-events: none; z-index: 9999; font-size: 16px;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  font-size: 16px;
   animation: sparkBurst 900ms cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
 }
 @keyframes sparkBurst {
-  0% { opacity: 0; transform: translate(0, 0) scale(0.4); }
+  0% { opacity: 0; transform: translate(0, 0) scale(0.4) rotate(0); }
   20% { opacity: 1; }
-  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.3); }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.3) rotate(var(--rot)); }
 }
 
+/* MODAL EASTER EGG (CENTRALIZAÇÃO PERFEITA) */
 .swal2-executive-dark-popup {
-  border: 1px solid rgba(79, 134, 247, 0.45) !important; border-radius: 28px !important;
-  background: linear-gradient(145deg, #0e1424, #080c14) !important; color: #f0f4fc !important;
+  border: 1px solid rgba(79, 134, 247, 0.45) !important;
+  border-radius: 28px !important;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85), 0 0 35px rgba(79, 134, 247, 0.25) !important;
+  background: linear-gradient(145deg, #0e1424, #080c14) !important;
+  color: var(--text-main) !important;
+  padding: 26px !important;
+  text-align: center !important;
+}
+
+.executive-photo-box {
+  position: relative;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin: 14px auto !important;
+  padding: 6px;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.5), rgba(157, 110, 255, 0.5));
+  border-radius: 22px;
+  box-shadow: 0 0 25px rgba(79, 134, 247, 0.35);
+  max-width: fit-content;
 }
 .executive-photo-box img {
-  width: 100%; max-width: 320px; border-radius: 18px; display: block; border: 3px solid #38bdf8;
+  width: 100%;
+  max-width: 320px;
+  border-radius: 18px;
+  display: block;
+  margin: 0 auto;
 }
