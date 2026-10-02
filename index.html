@@ -1,35 +1,59 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ERP Leticia Lustosa</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ERP Leticia Lustosa • Encerramentos 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<!-- CSS PRINCIPAL E MÓDULO DO TEMA ESCURO -->
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/dark.css">
+</head>
+<body class="theme-claro">
+
+<!-- EFEITOS DE FUNDO DO TEMA CLARO (FOFO) -->
 <div class="cute-bg" aria-hidden="true">
-  <span class="cute-spark" style="left:7%;top:14%;animation-delay:.2s">🩷</span>
-  <span class="cute-spark" style="left:24%;top:8%;animation-delay:1.6s">✨</span>
-  <span class="cute-spark" style="left:43%;top:16%;animation-delay:2.3s">💜</span>
-  <span class="cute-spark" style="left:67%;top:10%;animation-delay:.9s">🌟</span>
-  <span class="cute-spark" style="left:91%;top:23%;animation-delay:2.9s">💖</span>
-  <span class="cute-spark float-unicorn" style="left:12%;top:70%;animation-delay:3.1s">🦄</span>
-  <span class="cute-spark" style="left:76%;top:72%;animation-delay:1.1s">💫</span>
-  <span class="cute-spark float-unicorn" style="left:85%;top:45%;animation-delay:0.5s;font-size:32px;opacity:0.4;">🦄</span>
-  <span class="cute-spark float-unicorn" style="left:5%;top:40%;animation-delay:2.1s;font-size:28px;opacity:0.3;">🦄</span>
-  <span class="cute-spark float-unicorn" style="left:55%;top:85%;animation-delay:1.8s;font-size:40px;opacity:0.2;">🦄</span>
+  <span class="cute-spark" style="left:7%;top:14%;">🩷</span>
+  <span class="cute-spark" style="left:24%;top:8%;">✨</span>
+  <span class="cute-spark" style="left:43%;top:16%;">💜</span>
+  <span class="cute-spark" style="left:67%;top:10%;">🌟</span>
+  <span class="cute-spark" style="left:91%;top:23%;">💖</span>
+  <span class="cute-spark float-unicorn" style="left:12%;top:70%;">🦄</span>
+  <span class="cute-spark" style="left:76%;top:72%;">💫</span>
 </div>
 
-<!-- UNICÓRNIO INTERATIVO NO CANTO INFERIOR DIREITO -->
+<!-- MASCOTE DO TEMA CLARO (UNICÓRNIO) -->
 <div class="unicorn-mascot" id="unicornMascot" title="Clique no unicórnio para magia! ✨">
   <span>🦄</span>
   <span class="bubble" id="unicornBubble">Oii, Letícia 💖</span>
+</div>
+
+<!-- EFEITOS DE FUNDO DO TEMA ESCURO (ORBES) -->
+<div class="ambient-lighting" aria-hidden="true">
+  <div class="light-orb orb-1"></div>
+  <div class="light-orb orb-2"></div>
+  <div class="light-orb orb-3"></div>
+</div>
+
+<!-- MASCOTE DO TEMA ESCURO (GEMINI) -->
+<div class="gemini-mascot" id="geminiMascot" title="Gemini Assistant">
+  <svg class="gemini-svg" viewBox="0 0 24 24" fill="none">
+    <defs>
+      <linearGradient id="geminiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#38bdf8" />
+        <stop offset="45%" stop-color="#4f86f7" />
+        <stop offset="80%" stop-color="#9d6eff" />
+        <stop offset="100%" stop-color="#ec4899" />
+      </linearGradient>
+    </defs>
+    <path d="M12 2C12 7.52285 7.52285 12 2 12C7.52285 12 12 16.4771 12 22C12 16.4771 16.4771 12 22 12C16.4771 12 12 7.52285 12 2Z" fill="url(#geminiGrad)" />
+  </svg>
+  <span class="bubble" id="geminiBubble">Sistemas prontos, Letícia. ✨</span>
 </div>
 
 <div class="app">
@@ -48,13 +72,12 @@
       <button class="nav-btn" id="openAiFromNav"><span class="nav-icon">✦</span><span>Aurora AI</span></button>
     </nav>
 
-    <!-- CARD AURORA LIVE INTEGRADO NA BARRA LATERAL -->
-    <div class="side-section" style="margin-top:10px">Assistente Financeiro</div>
+    <div class="side-section" style="margin-top:10px">Radar Financeiro</div>
     <div class="side-aurora-card" id="sideAuroraCard" title="Clique para avançar para a próxima métrica">
       <div class="side-aurora-head">
         <div class="side-aurora-avatar">✦</div>
         <span class="side-aurora-name">Aurora Live</span>
-        <span class="side-aurora-tag">IA</span>
+        <span class="side-aurora-tag">RADAR</span>
       </div>
       <div class="side-aurora-msg" id="sideAuroraMsg">A calcular indicadores operacionais... 📊</div>
     </div>
@@ -129,7 +152,7 @@
             <div class="grid two"><div class="form-group"><label>Mês de referência</label><select id="mesReferenciaForm" class="control" required></select></div><div class="form-group"><label>Encerrado no Panjud?</label><select id="panjud" class="control" required><option>Não</option><option>Sim</option></select></div></div>
             <div class="grid two"><div class="form-group"><label>Recusado no Panjud?</label><select id="recusado" class="control" required><option>Não</option><option>Sim</option></select></div><div class="form-group"><label>Observações</label><input id="observacoes" class="control" maxlength="500"></div></div>
             <div class="form-actions"><button class="btn btn-primary" id="btnSubmit" type="submit">✓ Salvar registro</button><button class="btn btn-soft" type="button" id="btnReset">Limpar</button></div>
-            <div class="hint">Dica Turbo: use <b>Enter</b> para navegar entre os campos e salvar direto no final, ou <b>Ctrl + Enter</b> para salvar a qualquer momento! ⚡</div>
+            <div class="hint">Dica Turbo: use <b>Enter</b> para navegar entre os campos ou <b>Ctrl + Enter</b> para salvar a qualquer momento! ⚡</div>
           </form>
         </div>
       </div>
@@ -196,7 +219,7 @@
     <div class="win-title"><span class="section-cute">Diário de Auditoria</span></div>
     <button type="button" class="win-btn-close" id="btnCloseAuditoria" title="Fechar">×</button>
   </div>
-  <div class="win-sub">Registro imutável de ações para resguardo e conferência. (Arraste pelo topo ou redimensione na ponta)</div>
+  <div class="win-sub">Registro imutável de ações para resguardo e conferência.</div>
   <div class="win-body table-wrap">
     <table class="table">
       <thead><tr><th>Data/Hora</th><th>Ação</th><th>ID do Caso</th><th>Detalhes do Movimento</th></tr></thead>
@@ -230,9 +253,13 @@
   <div class="loading-card"><div class="spinner"></div><strong id="loadingTitle">Sincronizando…</strong><div style="font-size:11px;color:var(--muted);margin-top:5px">Aguarde a confirmação do servidor.</div></div>
 </div>
 
-<!-- SCRIPTS MODULARES -->
+<!-- SCRIPTS OFICIAIS DO SISTEMA -->
+<script src="js/app.js"></script>
 <script src="js/radar.js"></script>
 <script src="js/unicorn.js"></script>
-<script src="js/app.js"></script>
+
+<!-- MÓDULOS DE CONFIGURAÇÃO E TEMA ESCURO -->
+<script src="js/config.js"></script>
+<script src="js/dark.js"></script>
 </body>
 </html>
