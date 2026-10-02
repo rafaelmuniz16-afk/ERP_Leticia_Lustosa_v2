@@ -17,7 +17,6 @@
 <link rel="stylesheet" href="css/tema.css">
 
 <style>
-/* CSS Estrutural Básico e Ocultação de Mascotes já vêm do tema.css, mas garantimos aqui a estrutura do layout base */
 .app { display: grid; grid-template-columns: var(--sidebar) 1fr; min-height: 100vh; z-index: 10; position: relative; }
 .mascot-trigger { position: fixed; right: 24px; bottom: 24px; width: 60px; height: 60px; border-radius: 20px; background: var(--surface); border: 2px solid var(--primary); display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; z-index: 99; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.2s; }
 .mascot-trigger:hover { transform: scale(1.1) rotate(5deg); }
@@ -89,38 +88,149 @@
       </div>
     </div>
 
-    <!-- O RESTANTE DO HTML PERMANECE EXATAMENTE O MESMO (Filtros, KPIs, Formulário, Tabelas) -->
-    <!-- (Para economizar espaço na mensagem, insira aqui o miolo do seu index.html com as tags <section> originais) -->
-    
     <section class="filters">
-      <div class="field"><label>Mês de análise</label><select class="control" id="filterMonth"></select></div>
-      <div class="field"><label>Meta do mês</label><input class="control" id="metaInput" type="number" min="0" step="1"></div>
+      <div class="field meta-box"><label>Mês de análise</label><select class="control" id="filterMonth"></select></div>
+      <div class="field meta-box"><label>Meta do mês</label><input class="control" id="metaInput" type="number" min="0" step="1"></div>
       <div class="field"><label>Tipo</label><select class="control" id="filterTipo"><option>Todos</option><option>Ônus</option><option>Acordo</option><option>Êxito</option></select></div>
       <div class="field"><label>Panjud</label><select class="control" id="filterEncerrado"><option>Todos</option><option>Sim</option><option>Não</option></select></div>
+      <div class="field"><label>Buscar por</label><select class="control" id="searchType"><option value="id">ID do caso</option><option value="processo">Processo</option></select></div>
       <div class="field grow"><label>Pesquisa</label><input class="control" id="searchInput" placeholder="Digite ID ou número do processo…"></div>
     </section>
 
+    <section class="status" id="statusBanner">
+      <div class="status-left"><span class="status-ring"></span><div><div class="status-title" id="statusTitle">Carregando status…</div><div class="status-sub" id="statusSub">Calculando desempenho da meta.</div></div></div>
+      <div class="progress"><div id="statusProgress" style="width:0%"></div></div>
+    </section>
+
     <section class="grid kpi-grid">
-      <div class="kpi"><div class="kpi-label">Encerramentos Totais</div><div class="kpi-value" id="m5_quant">0</div></div>
-      <div class="kpi"><div class="kpi-label">Recusados Panjud</div><div class="kpi-value" id="m8_recusados" style="color:var(--warning)">0</div></div>
-      <div class="kpi"><div class="kpi-label">Encerramentos Reais</div><div class="kpi-value" id="m7_reais" style="color:var(--success)">0</div></div>
-      <div class="kpi"><div class="kpi-label">Falta para a Meta</div><div class="kpi-value" id="falta_reais" style="color:var(--danger)">0</div></div>
+      <div class="kpi tone-info"><div class="kpi-icon">◎</div><div class="kpi-label">Encerramentos</div><div class="kpi-value" id="m5_quant">0</div><div class="kpi-note">Quantidade cadastrada no mês</div></div>
+      <div class="kpi tone-warning"><div class="kpi-icon">↯</div><div class="kpi-label">Recusados Panjud</div><div class="kpi-value" id="m8_recusados">0</div><div class="kpi-note">Retirados do total efetivo</div></div>
+      <div class="kpi tone-success"><div class="kpi-icon">✓</div><div class="kpi-label">Encerramentos reais</div><div class="kpi-value" id="m7_reais">0</div><div class="kpi-note">Somente Panjud = Sim</div></div>
+      <div class="kpi tone-danger"><div class="kpi-icon">!</div><div class="kpi-label">Falta para a meta real</div><div class="kpi-value" id="falta_reais">0</div><div class="kpi-note" id="meta_diaria">0 casos/dia</div></div>
     </section>
 
-    <!-- Gráficos -->
-    <section class="grid content-grid" style="margin-top:20px;">
+    <section class="grid content-grid" id="cadastro">
       <div class="panel">
-        <div class="panel-head"><h2 style="margin:0;font-size:14px;">Distribuição</h2></div>
-        <div class="panel-body" style="height:250px;position:relative;"><canvas id="tiposChart"></canvas></div>
+        <div class="panel-head"><div><h2 class="panel-title">Produção e desempenho</h2></div></div>
+        <div class="panel-body">
+          <div class="grid analytics">
+            <div class="chart-box"><div class="chart-wrap"><canvas id="tiposChart"></canvas></div></div>
+            <div class="summary-list">
+              <div class="summary-row"><span>Ônus</span><strong id="count_onus">0</strong></div>
+              <div class="summary-row"><span>Acordo</span><strong id="count_acordo">0</strong></div>
+              <div class="summary-row"><span>Êxito</span><strong id="count_exito">0</strong></div>
+              <div class="summary-row summary-highlight"><span>Encerramentos totais</span><strong id="m6_totais">0</strong></div>
+              <div class="summary-row"><span>Faltam em quantidade</span><strong id="falta_quant">0</strong></div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="panel">
-        <div class="panel-head"><h2 style="margin:0;font-size:14px;">Evolução Diária</h2></div>
-        <div class="panel-body" style="height:250px;position:relative;"><canvas id="linhaChart"></canvas></div>
+      <div class="panel form-panel">
+        <div class="panel-head"><div><h2 class="panel-title" id="formTitle">Novo registro</h2></div><button class="btn btn-soft" id="btnCancel" style="display:none">Cancelar</button></div>
+        <div class="panel-body">
+          <form id="processForm">
+            <div class="grid two"><div class="form-group"><label>ID do caso</label><input id="idCaso" class="control" required></div><div class="form-group"><label>Número do processo</label><input id="numProcesso" class="control" required></div></div>
+            <div class="grid two"><div class="form-group"><label>Tipo</label><select id="tipoEncerramento" class="control" required><option>Ônus</option><option>Acordo</option><option>Êxito</option></select></div><div class="form-group"><label>Data finalizado</label><input id="dataEncerramento" type="date" class="control" required></div></div>
+            <div class="grid two"><div class="form-group"><label>Mês de referência</label><select id="mesReferenciaForm" class="control" required></select></div><div class="form-group"><label>Encerrado no Panjud?</label><select id="panjud" class="control" required><option>Não</option><option>Sim</option></select></div></div>
+            <div class="grid two"><div class="form-group"><label>Recusado no Panjud?</label><select id="recusado" class="control" required><option>Não</option><option>Sim</option></select></div><div class="form-group"><label>Observações</label><input id="observacoes" class="control" maxlength="500"></div></div>
+            <div class="form-actions"><button class="btn btn-primary" id="btnSubmit" type="submit">✓ Salvar registro</button><button class="btn btn-soft" type="button" id="btnReset">Limpar</button></div>
+          </form>
+        </div>
       </div>
     </section>
 
-    <!-- Formulário e Tabelas (Mantenha o seu original) -->
+    <section class="grid analytics" style="margin-top:16px">
+      <div class="panel">
+        <div class="panel-head"><div><h2 class="panel-title">Evolução diária</h2></div></div>
+        <div class="panel-body"><div class="chart-box"><div class="chart-wrap"><canvas id="linhaChart"></canvas></div></div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div><h2 class="panel-title">Atingimento da meta</h2></div></div>
+        <div class="panel-body">
+          <div class="summary-list">
+            <div class="summary-row"><span>Quantidades</span><strong id="labelQuant">0 / 0</strong></div>
+            <div class="summary-row"><span>Totais</span><strong id="labelTotais">0 / 0</strong></div>
+            <div class="summary-row summary-highlight"><span>Reais</span><strong id="labelReais">0 / 0</strong></div>
+            <div class="summary-row"><span>Meta diária restante</span><strong id="meta_diaria_2">0 casos/dia</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid finance-grid">
+      <div class="panel finance-card">
+        <div class="panel-head"><div><h2 class="panel-title">Ganho real atual</h2></div></div>
+        <div class="panel-body">
+          <div class="money-row"><span>Ônus</span><strong id="val_real_onus">R$ 0,00</strong></div>
+          <div class="money-row"><span>Acordo</span><strong id="val_real_acordo">R$ 0,00</strong></div>
+          <div class="money-row"><span>Êxito</span><strong id="val_real_exito">R$ 0,00</strong></div>
+          <div class="money-row money-total"><span>Valor final</span><strong id="val_real_total">R$ 0,00</strong></div>
+        </div>
+      </div>
+      <div class="panel finance-card">
+        <div class="panel-head"><div><h2 class="panel-title">Simulação a 100%</h2></div></div>
+        <div class="panel-body">
+          <div class="money-row"><span>Ônus × R$ 4</span><strong id="val_100_onus">R$ 0,00</strong></div>
+          <div class="money-row"><span>Acordo × R$ 3</span><strong id="val_100_acordo">R$ 0,00</strong></div>
+          <div class="money-row"><span>Êxito × R$ 2</span><strong id="val_100_exito">R$ 0,00</strong></div>
+          <div class="money-row money-total"><span>Valor final</span><strong id="val_100_total">R$ 0,00</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel table-panel" id="historico">
+      <div class="panel-head">
+        <div><h2 class="panel-title">Histórico de casos</h2></div>
+        <div class="table-tools">
+          <div class="field" style="min-width:110px"><label>Ordem (Data)</label><select class="control" id="sortOrder"><option value="desc">Mais recentes</option><option value="asc">Mais antigos</option></select></div>
+          <div class="field"><label>De (Data)</label><input type="date" class="control" id="dateStart"></div>
+          <div class="field"><label>Até (Data)</label><input type="date" class="control" id="dateEnd"></div>
+          <div class="field" style="min-width:95px"><label>Mostrar</label><select class="control" id="pageSize"><option>15</option><option>50</option><option>100</option></select></div>
+        </div>
+      </div>
+      <div class="table-wrap"><table class="table"><thead><tr><th>ID</th><th>Processo</th><th>Tipo</th><th>Data</th><th>Mês</th><th>Panjud</th><th>Recusado</th><th>Observações</th><th>Ações</th></tr></thead><tbody id="recordsTable"></tbody></table></div>
+      <div class="pagination"><button class="btn btn-soft" id="btnPrevPage">← Anterior</button><span id="pageInfo">Página 1 de 1</span><button class="btn btn-soft" id="btnNextPage">Próxima →</button></div>
+    </section>
   </main>
+</div>
+
+<!-- AUDITORIA -->
+<div class="floating-window" id="winAuditoria">
+  <div class="win-header" id="winAuditoriaHeader">
+    <div class="win-title">Diário de Auditoria</div>
+    <button type="button" class="win-btn-close" id="btnCloseAuditoria" title="Fechar">×</button>
+  </div>
+  <div class="win-body table-wrap">
+    <table class="table">
+      <thead><tr><th>Data/Hora</th><th>Ação</th><th>ID do Caso</th><th>Detalhes do Movimento</th></tr></thead>
+      <tbody id="logsTable"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- AURORA AI -->
+<div class="ai-drawer" id="aiDrawer" aria-hidden="true">
+  <div class="ai-backdrop" id="aiBackdrop"></div>
+  <aside class="ai-panel">
+    <div class="ai-head">
+      <div class="ai-brand">
+        <div class="ai-logo">✦</div>
+        <div><div class="ai-title" style="font-weight:bold;">Aurora AI</div><div class="ai-state" id="aiState">Assistente conectada</div></div>
+      </div>
+      <div class="ai-tools"><button class="btn btn-soft" id="btnAiKey">⚿</button><button class="btn btn-soft" id="btnAiClose">×</button></div>
+    </div>
+    <div class="ai-body" id="chatMessages"></div>
+    <div class="ai-compose">
+      <div class="compose-wrap">
+        <textarea id="chatInputText" rows="1" placeholder="Ex.: cadastre o caso 123…"></textarea>
+        <button class="send-btn" id="btnChatSend">➤</button>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<div class="loading" id="loading">
+  <div class="loading-card"><div class="spinner"></div><strong id="loadingTitle">Sincronizando…</strong><div style="font-size:11px;color:var(--muted);margin-top:5px">Aguarde a confirmação do servidor.</div></div>
 </div>
 
 <!-- SCRIPTS OFICIAIS DO SISTEMA -->
@@ -204,7 +314,7 @@ document.addEventListener("DOMContentLoaded", () => {
       hwBats.forEach((b, i) => {
         b.x += b.vx; b.y += b.vy;
         hCtx.fillStyle = 'rgba(255, 120, 31, 0.4)';
-        hCtx.fillRect(b.x, b.y, 10, 5); // Simplificado para performance
+        hCtx.fillRect(b.x, b.y, 10, 5);
         if(b.x > hwCanvas.width) hwBats[i].x = 0;
       });
     }
@@ -224,7 +334,6 @@ document.addEventListener("DOMContentLoaded", () => {
   animLoop();
 });
 
-// Keyframe pro CSS da neve
 const style = document.createElement('style');
 style.innerHTML = `@keyframes snowfall { 0% { transform: translateY(-20px); opacity: 0;} 10% {opacity: 0.8;} 100% { transform: translateY(105vh); opacity: 0;} }`;
 document.head.appendChild(style);
