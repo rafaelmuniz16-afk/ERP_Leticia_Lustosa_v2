@@ -4,15 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ERP Leticia Lustosa • Multiverso 2026</title>
-<!-- AS FONTES DE TODOS OS TEMAS -->
+<!-- FONTES DE TODOS OS TEMAS -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Manrope:wght@600;800&family=Cinzel:wght@700&family=Orbitron:wght@700&family=Space+Grotesk:wght@600&family=Fredoka:wght@600&family=Creepster&family=Nosifer&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=Cinzel:wght@700&family=Orbitron:wght@700&family=Space+Grotesk:wght@600&family=Fredoka:wght@600&family=Creepster&family=Nosifer&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<!-- CARREGA O CSS UNIVERSAL -->
+<!-- CSS ORIGINAL E O NOVO TEMA.CSS -->
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/tema.css">
 
@@ -64,14 +64,18 @@
       <button class="nav-btn" id="openAiFromNav"><span>✦ Aurora AI</span></button>
     </nav>
 
-    <div class="side-section" style="margin-top:10px">Radar de Inteligência</div>
-    <div class="side-aurora-card" id="sideAuroraCard">
-      <div style="font-weight:bold;margin-bottom:5px;color:var(--primary)">✦ Aurora Live</div>
-      <div class="side-aurora-msg" id="sideAuroraMsg">A calcular indicadores... 📊</div>
+    <div class="side-section" style="margin-top:10px">Radar Financeiro</div>
+    <div class="side-aurora-card" id="sideAuroraCard" title="Clique para avançar para a próxima métrica">
+      <div class="side-aurora-head">
+        <div class="side-aurora-avatar">✦</div>
+        <span class="side-aurora-name">Aurora Live</span>
+        <span class="side-aurora-tag">RADAR</span>
+      </div>
+      <div class="side-aurora-msg" id="sideAuroraMsg">A calcular indicadores operacionais... 📊</div>
     </div>
 
     <div class="side-card">
-      <div style="font-size:11px;font-weight:bold;margin-bottom:5px;">Conexão com a Nuvem</div>
+      <div class="side-card-title">Conexão com a nuvem</div>
       <div class="sync-line"><span><i class="status-dot" id="sideDot"></i><span id="sideStatus">Verificando…</span></span><span id="sideCount">0</span></div>
     </div>
   </aside>
@@ -79,12 +83,13 @@
   <main class="main">
     <div class="topbar" id="dashboard">
       <div>
-        <div class="eyebrow" style="color:var(--primary);font-weight:bold;">Painel Operacional 2026</div>
-        <h1 class="page-title" style="margin:5px 0;">Gestão de Encerramentos</h1>
-        <p class="page-subtitle">Te Amo, Letícia! 💖</p>
+        <div class="eyebrow">Painel Operacional 2026</div>
+        <h1 class="page-title">Gestão de Encerramentos</h1>
+        <p class="page-subtitle">Te Amo 💖</p>
       </div>
       <div class="top-actions">
-        <button class="btn btn-primary" id="btnQuickToggle">📱 Tela Vertical</button>
+        <button class="btn btn-soft" id="btnRefresh">↻ Atualizar</button>
+        <button class="btn btn-primary" id="btnAiTop">✦ Falar com Aurora</button>
       </div>
     </div>
 
@@ -111,7 +116,9 @@
 
     <section class="grid content-grid" id="cadastro">
       <div class="panel">
-        <div class="panel-head"><div><h2 class="panel-title">Produção e desempenho</h2></div></div>
+        <div class="panel-head">
+          <div><h2 class="panel-title">Produção e desempenho</h2><div class="panel-sub">Distribuição dos encerramentos no mês selecionado.</div></div>
+        </div>
         <div class="panel-body">
           <div class="grid analytics">
             <div class="chart-box"><div class="chart-wrap"><canvas id="tiposChart"></canvas></div></div>
@@ -126,7 +133,10 @@
         </div>
       </div>
       <div class="panel form-panel">
-        <div class="panel-head"><div><h2 class="panel-title" id="formTitle">Novo registro</h2></div><button class="btn btn-soft" id="btnCancel" style="display:none">Cancelar</button></div>
+        <div class="panel-head">
+          <div><h2 class="panel-title" id="formTitle">Novo registro</h2><div class="panel-sub">A alteração só aparece como salva após confirmação da nuvem.</div></div>
+          <button class="btn btn-soft" id="btnCancel" style="display:none">Cancelar</button>
+        </div>
         <div class="panel-body">
           <form id="processForm">
             <div class="grid two"><div class="form-group"><label>ID do caso</label><input id="idCaso" class="control" required></div><div class="form-group"><label>Número do processo</label><input id="numProcesso" class="control" required></div></div>
@@ -134,6 +144,7 @@
             <div class="grid two"><div class="form-group"><label>Mês de referência</label><select id="mesReferenciaForm" class="control" required></select></div><div class="form-group"><label>Encerrado no Panjud?</label><select id="panjud" class="control" required><option>Não</option><option>Sim</option></select></div></div>
             <div class="grid two"><div class="form-group"><label>Recusado no Panjud?</label><select id="recusado" class="control" required><option>Não</option><option>Sim</option></select></div><div class="form-group"><label>Observações</label><input id="observacoes" class="control" maxlength="500"></div></div>
             <div class="form-actions"><button class="btn btn-primary" id="btnSubmit" type="submit">✓ Salvar registro</button><button class="btn btn-soft" type="button" id="btnReset">Limpar</button></div>
+            <div class="hint">Dica Turbo: use <b>Enter</b> para navegar entre os campos ou <b>Ctrl + Enter</b> para salvar a qualquer momento! ⚡</div>
           </form>
         </div>
       </div>
@@ -141,11 +152,11 @@
 
     <section class="grid analytics" style="margin-top:16px">
       <div class="panel">
-        <div class="panel-head"><div><h2 class="panel-title">Evolução diária</h2></div></div>
+        <div class="panel-head"><div><h2 class="panel-title">Evolução diária</h2><div class="panel-sub">Quantidade de encerramentos por dia.</div></div></div>
         <div class="panel-body"><div class="chart-box"><div class="chart-wrap"><canvas id="linhaChart"></canvas></div></div></div>
       </div>
       <div class="panel">
-        <div class="panel-head"><div><h2 class="panel-title">Atingimento da meta</h2></div></div>
+        <div class="panel-head"><div><h2 class="panel-title">Atingimento da meta</h2><div class="panel-sub">Quantidade, totais e reais.</div></div></div>
         <div class="panel-body">
           <div class="summary-list">
             <div class="summary-row"><span>Quantidades</span><strong id="labelQuant">0 / 0</strong></div>
@@ -159,7 +170,7 @@
 
     <section class="grid finance-grid">
       <div class="panel finance-card">
-        <div class="panel-head"><div><h2 class="panel-title">Ganho real atual</h2></div></div>
+        <div class="panel-head"><div><h2 class="panel-title">Ganho real atual</h2><div class="panel-sub">Faixa calculada pela % da meta real.</div></div></div>
         <div class="panel-body">
           <div class="money-row"><span>Ônus</span><strong id="val_real_onus">R$ 0,00</strong></div>
           <div class="money-row"><span>Acordo</span><strong id="val_real_acordo">R$ 0,00</strong></div>
@@ -168,7 +179,7 @@
         </div>
       </div>
       <div class="panel finance-card">
-        <div class="panel-head"><div><h2 class="panel-title">Simulação a 100%</h2></div></div>
+        <div class="panel-head"><div><h2 class="panel-title">Simulação a 100%</h2><div class="panel-sub">Referência: 4 / 3 / 2 por tipo.</div></div></div>
         <div class="panel-body">
           <div class="money-row"><span>Ônus × R$ 4</span><strong id="val_100_onus">R$ 0,00</strong></div>
           <div class="money-row"><span>Acordo × R$ 3</span><strong id="val_100_acordo">R$ 0,00</strong></div>
@@ -180,12 +191,12 @@
 
     <section class="panel table-panel" id="historico">
       <div class="panel-head">
-        <div><h2 class="panel-title">Histórico de casos</h2></div>
+        <div><h2 class="panel-title">Histórico de casos</h2><div class="panel-sub">Filtros globais aplicados ao mês selecionado.</div></div>
         <div class="table-tools">
           <div class="field" style="min-width:110px"><label>Ordem (Data)</label><select class="control" id="sortOrder"><option value="desc">Mais recentes</option><option value="asc">Mais antigos</option></select></div>
           <div class="field"><label>De (Data)</label><input type="date" class="control" id="dateStart"></div>
           <div class="field"><label>Até (Data)</label><input type="date" class="control" id="dateEnd"></div>
-          <div class="field" style="min-width:95px"><label>Mostrar</label><select class="control" id="pageSize"><option>15</option><option>50</option><option>100</option></select></div>
+          <div class="field" style="min-width:95px"><label>Mostrar</label><select class="control" id="pageSize"><option>15</option><option>50</option><option>100</option><option>200</option><option>500</option></select></div>
         </div>
       </div>
       <div class="table-wrap"><table class="table"><thead><tr><th>ID</th><th>Processo</th><th>Tipo</th><th>Data</th><th>Mês</th><th>Panjud</th><th>Recusado</th><th>Observações</th><th>Ações</th></tr></thead><tbody id="recordsTable"></tbody></table></div>
@@ -200,6 +211,7 @@
     <div class="win-title">Diário de Auditoria</div>
     <button type="button" class="win-btn-close" id="btnCloseAuditoria" title="Fechar">×</button>
   </div>
+  <div class="win-sub">Registro imutável de ações para resguardo e conferência.</div>
   <div class="win-body table-wrap">
     <table class="table">
       <thead><tr><th>Data/Hora</th><th>Ação</th><th>ID do Caso</th><th>Detalhes do Movimento</th></tr></thead>
@@ -215,7 +227,7 @@
     <div class="ai-head">
       <div class="ai-brand">
         <div class="ai-logo">✦</div>
-        <div><div class="ai-title" style="font-weight:bold;">Aurora AI</div><div class="ai-state" id="aiState">Assistente conectada</div></div>
+        <div><div class="ai-title">Aurora AI</div><div class="ai-state" id="aiState">Assistente administrativa</div></div>
       </div>
       <div class="ai-tools"><button class="btn btn-soft" id="btnAiKey">⚿</button><button class="btn btn-soft" id="btnAiClose">×</button></div>
     </div>
@@ -248,16 +260,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const hrCanvas = document.getElementById('horrorCanvas');
   const snowContainer = document.getElementById('snowContainer');
 
-  const fCtx = fwCanvas.getContext('2d');
-  const cCtx = cyCanvas.getContext('2d');
-  const hCtx = hwCanvas.getContext('2d');
-  const eCtx = eaCanvas.getContext('2d');
-  const hrCtx = hrCanvas.getContext('2d');
+  const fCtx = fwCanvas?.getContext('2d');
+  const cCtx = cyCanvas?.getContext('2d');
+  const hCtx = hwCanvas?.getContext('2d');
+  const eCtx = eaCanvas?.getContext('2d');
+  const hrCtx = hrCanvas?.getContext('2d');
 
   function resize() {
     const w = window.innerWidth, h = window.innerHeight;
-    fwCanvas.width = cyCanvas.width = hwCanvas.width = eaCanvas.width = hrCanvas.width = w;
-    fwCanvas.height = cyCanvas.height = hwCanvas.height = eaCanvas.height = hrCanvas.height = h;
+    if (fwCanvas) { fwCanvas.width = w; fwCanvas.height = h; }
+    if (cyCanvas) { cyCanvas.width = w; cyCanvas.height = h; }
+    if (hwCanvas) { hwCanvas.width = w; hwCanvas.height = h; }
+    if (eaCanvas) { eaCanvas.width = w; eaCanvas.height = h; }
+    if (hrCanvas) { hrCanvas.width = w; hrCanvas.height = h; }
   }
   window.addEventListener('resize', resize);
   resize();
@@ -277,15 +292,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Lógica simplificada de atualização de partículas
-  let fwRockets = [], cyberStreams = [], hwBats = [], eaEggs = [], hrDrips = [];
+  let fwRockets = [], cyberStreams = [], hwBats = [], hrDrips = [];
   
   function animLoop() {
     requestAnimationFrame(animLoop);
     const bodyClass = document.body.className;
 
     // ANO NOVO (Fogos)
-    if (bodyClass.includes('theme-anonovo')) {
+    if (bodyClass.includes('theme-anonovo') && fCtx) {
       fCtx.fillStyle = 'rgba(0,0,0,0.2)'; fCtx.fillRect(0,0,fwCanvas.width,fwCanvas.height);
       if(Math.random() < 0.05) fwRockets.push({x: Math.random()*fwCanvas.width, y: fwCanvas.height, vy: -5 - Math.random()*4});
       fwRockets.forEach((r, i) => {
@@ -296,7 +310,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // CYBERPUNK (Chuva Matrix)
-    if (bodyClass.includes('theme-cyberpunk')) {
+    if (bodyClass.includes('theme-cyberpunk') && cCtx) {
       cCtx.clearRect(0,0,cyCanvas.width,cyCanvas.height);
       if(cyberStreams.length < 30) cyberStreams.push({x: Math.random()*cyCanvas.width, y: 0, s: 2+Math.random()*4});
       cyberStreams.forEach((s, i) => {
@@ -308,7 +322,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     // HALLOWEEN (Morcegos)
-    if (bodyClass.includes('theme-halloween')) {
+    if (bodyClass.includes('theme-halloween') && hCtx) {
       hCtx.clearRect(0,0,hwCanvas.width,hwCanvas.height);
       if(hwBats.length < 10) hwBats.push({x: Math.random()*hwCanvas.width, y: Math.random()*hwCanvas.height, vx: 2, vy: Math.random()-0.5});
       hwBats.forEach((b, i) => {
@@ -320,7 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // TERROR (Sangue)
-    if (bodyClass.includes('theme-terror')) {
+    if (bodyClass.includes('theme-terror') && hrCtx) {
       hrCtx.clearRect(0,0,hrCanvas.width,hrCanvas.height);
       if(hrDrips.length < 15) hrDrips.push({x: Math.random()*hrCanvas.width, y: 0, s: 1+Math.random()*3});
       hrDrips.forEach((d, i) => {
