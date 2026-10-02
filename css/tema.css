@@ -1,0 +1,59 @@
+/* ============================================================ */
+/* LAYOUT VERTICAL (RESPONSIVO)                                 */
+/* ============================================================ */
+body.layout-vertical .app { display: block !important; }
+body.layout-vertical .sidebar {
+  position: static !important;
+  width: 100% !important;
+  height: auto !important;
+  padding: 16px 20px !important;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.16) !important;
+  overflow-y: visible !important;
+  border-radius: 0 0 24px 24px !important;
+}
+body.layout-vertical .sidebar .brand { padding-bottom: 12px !important; justify-content: center !important; }
+body.layout-vertical .sidebar .side-section { display: none !important; }
+body.layout-vertical .sidebar .nav {
+  flex-direction: row !important;
+  overflow-x: auto !important;
+  gap: 8px !important;
+  padding-bottom: 6px !important;
+}
+body.layout-vertical .sidebar .nav-btn { white-space: nowrap !important; padding: 8px 14px !important; }
+body.layout-vertical .main { padding: 24px 20px 70px !important; }
+
+/* ============================================================ */
+/* ESTILO DO MODAL DE CONFIGURAÇÕES                             */
+/* ============================================================ */
+.theme-card-option {
+  border: 2px solid var(--line, #e2e8f0);
+  border-radius: 12px;
+  padding: 12px;
+  background: var(--surface-2, #f8fafc);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+}
+.theme-card-option:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary, #3b82f6);
+}
+.theme-card-option.active {
+  border-color: var(--primary, #3b82f6);
+  background: var(--surface-3, #eff6ff);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* ============================================================ */
+/* OCULTAÇÃO DE ELEMENTOS INCOMPATÍVEIS                         */
+/* ============================================================ */
+/* Isso garante que se você colar os 9 mascotes/canvas no index, apenas o ativo apareça */
+body:not(.theme-claro) #canvas-claro, body:not(.theme-claro) #mascot-claro { display: none !important; }
+body:not(.theme-escuro) #canvas-escuro, body:not(.theme-escuro) #mascot-escuro { display: none !important; }
+body:not(.theme-anonovo) #canvas-anonovo, body:not(.theme-anonovo) #mascot-anonovo { display: none !important; }
+body:not(.theme-cyberpunk) #canvas-cyberpunk, body:not(.theme-cyberpunk) #mascot-cyberpunk { display: none !important; }
+body:not(.theme-festajunina) #canvas-festajunina, body:not(.theme-festajunina) #mascot-festajunina { display: none !important; }
+body:not(.theme-halloween) #canvas-halloween, body:not(.theme-halloween) #mascot-halloween { display: none !important; }
+body:not(.theme-pascoa) #canvas-pascoa, body:not(.theme-pascoa) #mascot-pascoa { display: none !important; }
+body:not(.theme-natal) #canvas-natal, body:not(.theme-natal) #mascot-natal { display: none !important; }
+body:not(.theme-terror) #canvas-terror, body:not(.theme-terror) #mascot-terror { display: none !important; }
