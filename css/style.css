@@ -311,23 +311,55 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
   .table{min-width:920px}
 }
 /* ============================================================ */
-/* BOTÃO v2.1 BETA NO TOPO                                      */
+/* ESFERA GLASSMORPHIC v2.1 (PULSANTE & BRILHO)                 */
 /* ============================================================ */
-.btn-beta-tag {
-  font-size: 11px !important;
-  padding: 8px 11px !important;
-  border: 1px dashed var(--primary, #d85c9d) !important;
-  color: var(--primary, #d85c9d) !important;
-  text-decoration: none !important;
-  font-weight: 800 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 4px !important;
-  transition: all 0.2s ease !important;
+@keyframes orbPulseGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(216, 92, 157, 0.5), 0 4px 15px rgba(216, 92, 157, 0.2);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 16px 4px rgba(216, 92, 157, 0.45), 0 6px 20px rgba(155, 116, 232, 0.35);
+    transform: scale(1.05);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(216, 92, 157, 0.5), 0 4px 15px rgba(216, 92, 157, 0.2);
+    transform: scale(1);
+  }
 }
 
-.btn-beta-tag:hover {
-  background: var(--surface-3, #fff0f8) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 4px 12px rgba(216, 92, 157, 0.2) !important;
+.btn-beta-orb {
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.18) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1.5px solid rgba(216, 92, 157, 0.45) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-decoration: none !important;
+  color: var(--primary, #d85c9d) !important;
+  font-family: 'Space Grotesk', 'Manrope', sans-serif !important;
+  font-weight: 800 !important;
+  font-size: 11px !important;
+  letter-spacing: -0.2px !important;
+  animation: orbPulseGlow 3s infinite ease-in-out !important;
+  transition: all 0.25s ease !important;
+  cursor: pointer !important;
+  user-select: none !important;
+}
+
+.btn-beta-orb span {
+  text-decoration: none !important;
+}
+
+.btn-beta-orb:hover {
+  background: rgba(255, 240, 248, 0.4) !important;
+  border-color: var(--primary, #d85c9d) !important;
+  color: #fff !important;
+  transform: scale(1.12) !important;
+  box-shadow: 0 0 22px rgba(216, 92, 157, 0.6) !important;
 }
