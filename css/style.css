@@ -310,3 +310,24 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
   .progress{width:100%;min-width:0}
   .table{min-width:920px}
 }
+/* ============================================================ */
+/* BOTÃO v2.1 BETA NO TOPO                                      */
+/* ============================================================ */
+.btn-beta-tag {
+  font-size: 11px !important;
+  padding: 8px 11px !important;
+  border: 1px dashed var(--primary, #d85c9d) !important;
+  color: var(--primary, #d85c9d) !important;
+  text-decoration: none !important;
+  font-weight: 800 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-beta-tag:hover {
+  background: var(--surface-3, #fff0f8) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(216, 92, 157, 0.2) !important;
+}
