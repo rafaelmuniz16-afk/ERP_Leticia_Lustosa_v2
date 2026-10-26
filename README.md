@@ -1,3 +1,7 @@
+> **Versão histórica (arquivo de referência).** O código-fonte desta versão permanece disponível neste repositório e em seu histórico de commits. O site publicado desta versão redireciona automaticamente para o [ERP v2.1.1](https://rafaelmuniz16-afk.github.io/ERP_Leticia_Lustosa_v2.1.1/).
+
+---
+
 ERP Leticia Lustosa — Encerramentos 2026
 
 > Uma aplicação web desenvolvida para transformar um processo operacional baseado em planilhas em uma experiência mais organizada, visual e automatizada.
